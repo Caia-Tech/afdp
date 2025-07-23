@@ -1,0 +1,163 @@
+version: "1.0.0"
+name: "AFDP Policy Framework Test"
+description: "Test configuration for policy framework"
+
+framework:
+  logging:
+    level: "debug"
+    format: "json"
+    output: "stdout"
+  
+  metrics:
+    enabled: true
+    port: 9090
+    path: "/metrics"
+    namespace: "afdp_test"
+  
+  health:
+    enabled: true
+    port: 8080
+    path: "/health"
+    interval: "30s"
+  
+  performance:
+    max_concurrent_requests: 100
+    request_timeout: 30s
+    max_memory: "1Gi"
+
+api:
+  rest:
+    enabled: true
+    host: "localhost"
+    port: 8081
+    tls:
+      min_version: ""
+  
+  grpc:
+    enabled: false
+    host: "localhost"
+    port: 9001
+
+plugins:
+  - name: "default"
+    type: "security"
+    enabled: true
+    source:
+      type: "local"
+      location: "builtin:security"
+    config:
+      jwt_secret: "test-secret-key-for-testing-only"
+      users:
+        - username: "testadmin"
+          email: "testadmin@test.local"
+          password: "testpass123"
+          roles: ["admin"]
+        - username: "testuser"
+          email: "testuser@test.local"
+          password: "testpass123"
+          roles: ["user"]
+
+  - name: "rego"
+    type: "evaluator"
+    enabled: true
+    source:
+      type: "local"
+      location: "builtin:rego"
+    config:
+      data:
+        users:
+          alice: 
+            department: "engineering"
+            clearance: "high"
+          bob:
+            department: "sales"
+            clearance: "medium"
+      policies:
+        test_policy: |
+          package policy
+          
+          default allow = false
+          
+          allow {
+            input.user == "alice"
+            input.action == "read"
+          }
+          
+          allow {
+            input.user == "bob"
+            input.action == "list"
+          }
+
+  - name: "postgres"
+    type: "data_source"
+    enabled: false
+    source:
+      type: "local"
+      location: "builtin:postgres"
+    config:
+      host: "localhost"
+      port: 5432
+      database: "afdp_test"
+      username: "afdp"
+      password: "testpass"
+      max_connections: 10
+
+  - name: "workflow"
+    type: "workflow"
+    enabled: true
+    source:
+      type: "local"
+      location: "builtin:workflow"
+    config:
+      workflows:
+        - id: "test-workflow"
+          name: "Test Workflow"
+          description: "Simple test workflow"
+          steps:
+            - id: "step1"
+              name: "First Step"
+              type: "evaluate"
+            - id: "step2"
+              name: "Second Step"
+              type: "notify"
+
+security:
+  authentication:
+    primary:
+      type: "jwt"
+      config:
+        issuer: "afdp-test"
+        audience: "afdp-api"
+    mfa:
+      enabled: false
+  
+  authorization:
+    model: "rbac"
+    rbac:
+      roles:
+        admin:
+          permissions: ["*"]
+        operator:
+          permissions: ["policy.read", "policy.evaluate"]
+        user:
+          permissions: ["policy.read", "policy.evaluate"]
+
+storage:
+  postgresql:
+    host: ""
+    port: 0
+    database: ""
+    username: ""
+    password: ""
+
+monitoring:
+  prometheus:
+    enabled: true
+    scrape_interval: "30s"
+  alerting:
+    rules: []
+
+dynamic_config:
+  hot_reload:
+    enabled: true
+    interval: "60s"

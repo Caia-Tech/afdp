@@ -1,0 +1,116 @@
+version: '3.8'
+
+services:
+  # Policy Engine Service
+  policy-engine:
+    build: .
+    ports:
+      - "8080:8080"
+    environment:
+      - DATABASE_URL=postgres://policy_user:policy_pass@postgres:5432/policy_db?sslmode=disable
+      - OPA_URL=http://opa:8181
+      - TEMPORAL_HOST=temporal:7233
+      - NOTARY_SERVICE_URL=http://notary-service:8081
+      - LOG_LEVEL=debug
+    depends_on:
+      - postgres
+      - opa
+      - temporal
+    volumes:
+      - ./policies:/app/policies:ro
+    networks:
+      - afdp-network
+
+  # PostgreSQL Database
+  postgres:
+    image: postgres:15-alpine
+    environment:
+      - POSTGRES_DB=policy_db
+      - POSTGRES_USER=policy_user
+      - POSTGRES_PASSWORD=policy_pass
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      - ./migrations:/docker-entrypoint-initdb.d:ro
+    networks:
+      - afdp-network
+
+  # Open Policy Agent
+  opa:
+    image: openpolicyagent/opa:latest-envoy
+    ports:
+      - "8181:8181"
+    command:
+      - "run"
+      - "--server"
+      - "--addr=0.0.0.0:8181"
+      - "--log-level=debug"
+      - "/policies"
+    volumes:
+      - ./policies:/policies:ro
+    networks:
+      - afdp-network
+
+  # Temporal Server
+  temporal:
+    image: temporalio/auto-setup:latest
+    ports:
+      - "7233:7233"
+      - "8233:8233"
+    environment:
+      - DB=postgresql
+      - DB_PORT=5432
+      - POSTGRES_USER=temporal
+      - POSTGRES_PWD=temporal
+      - POSTGRES_SEEDS=temporal-postgres
+      - DYNAMIC_CONFIG_FILE_PATH=config/dynamicconfig/development-sql.yaml
+    depends_on:
+      - temporal-postgres
+    networks:
+      - afdp-network
+
+  # Temporal PostgreSQL
+  temporal-postgres:
+    image: postgres:13
+    environment:
+      - POSTGRES_PASSWORD=temporal
+      - POSTGRES_USER=temporal
+      - POSTGRES_DB=temporal
+    ports:
+      - "5433:5432"
+    volumes:
+      - temporal_postgres_data:/var/lib/postgresql/data
+    networks:
+      - afdp-network
+
+  # Temporal Web UI
+  temporal-web:
+    image: temporalio/web:latest
+    ports:
+      - "8088:8088"
+    environment:
+      - TEMPORAL_GRPC_ENDPOINT=temporal:7233
+    depends_on:
+      - temporal
+    networks:
+      - afdp-network
+
+  # Redis for caching (optional)
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - afdp-network
+
+networks:
+  afdp-network:
+    external: true
+
+volumes:
+  postgres_data:
+  temporal_postgres_data:
+  redis_data:

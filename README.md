@@ -35,7 +35,7 @@ Enterprise-grade cryptographic notarization service providing:
 - **Audit Trails** - Forensic-grade evidence for regulatory compliance
 - **Multi-Protocol** - REST API, gRPC, and Pulsar messaging support
 
-**Status**: Initial implementation with comprehensive testing (99.7% success rate across 187 test cases)
+
 
 ### Planned Services
 
@@ -44,15 +44,23 @@ Enterprise-grade cryptographic notarization service providing:
 - Compliance policy validation
 - Risk assessment automation
 
-#### 🔍 Evidence Collection Service `[Planned]`
-- Automated artifact collection
-- Data lineage tracking
-- Provenance verification
+#### 🔍 [Repository Analysis Service](services/repository-analysis/) `[Development]`
+Universal forensic analysis for any repository type:
+- **Security Investigations** - Source code, digital evidence, financial records
+- **Threat Detection** - AI-powered anomaly identification and threat assessment
+- **Legal Support** - Chain of custody, evidence discovery, compliance monitoring
+- **Distributed Intelligence** - Real-time selective sharing with stakeholders
 
 #### 📈 Compliance Dashboard `[Planned]`
 - Real-time compliance monitoring
 - Regulatory reporting automation
 - Audit trail visualization
+
+## 🚨 Enterprise Use Cases
+
+**For comprehensive real-world applications, see:**
+- **[🛡️ Public Safety & Threat Prevention](PUBLIC-SAFETY-USAGE.md)** - Law enforcement, terrorism prevention, threat analysis
+- **[💼 Business & Enterprise Applications](BUSINESS-USAGE.md)** - Litigation prevention, compliance monitoring, risk management
 
 ## 🌟 Key Features
 
@@ -62,6 +70,7 @@ Enterprise-grade cryptographic notarization service providing:
 - **🔍 Verifiable**: Public cryptographic receipts for independent verification
 - **🏗️ Modular**: Microservices architecture for scalability
 - **📊 Observable**: Comprehensive metrics, logging, and tracing
+- **🌐 Distributed Network Intelligence**: Choose what gets logged and instantly distribute findings to your stakeholders (legal teams, insurance, law enforcement, regulatory bodies) in real-time
 
 ## 🚀 Quick Start
 
@@ -126,6 +135,7 @@ For detailed setup instructions, see the [Notary Service Documentation](services
 
 ### Service-Specific Documentation
 - 📖 **[Notary Service](services/notary-service/readme.md)** - Complete notary service documentation
+- 📖 **[Repository Analysis Service](services/repository-analysis/README.md)** - Universal forensic analysis capabilities
 
 ## 🗺️ Roadmap
 
@@ -138,7 +148,8 @@ For detailed setup instructions, see the [Notary Service Documentation](services
 
 ### 🚧 Phase 2: Service Expansion (Q2 2025)
 - [ ] Policy Engine service implementation
-- [ ] Evidence Collection service
+- [ ] Repository Analysis service completion
+- [ ] Distributed intelligence networks
 - [ ] Inter-service communication patterns
 - [ ] Service mesh integration
 

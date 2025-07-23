@@ -1,0 +1,48 @@
+name: "AFDP Policy Engine"
+version: "1.0.0"
+log_level: "info"
+
+api:
+  port: 8081
+  host: "0.0.0.0"
+  cors:
+    enabled: true
+    allowed_origins: ["*"]
+  rate_limit:
+    enabled: true
+    requests_per_minute: 100
+
+security:
+  jwt_secret: "example-secret-key-please-change-in-production"
+  token_expiry: "24h"
+  refresh_token_expiry: "168h"
+
+metrics:
+  enabled: true
+  namespace: "afdp_policy_engine"
+  prometheus:
+    enabled: true
+    port: 9090
+
+decision_engine:
+  cache_enabled: true
+  cache_ttl: 300
+  max_cache_size: 10000
+
+plugins:
+  - name: "builtin-rego"
+    type: "evaluator"
+    enabled: true
+    config:
+      policies_path: "./policies"
+      
+  - name: "builtin-postgres"
+    type: "data_source"
+    enabled: false
+    config:
+      connection_string: "postgres://user:pass@localhost/afdp?sslmode=disable"
+
+storage:
+  provider: "postgresql"
+  config:
+    connection_string: "postgres://user:pass@localhost/afdp?sslmode=disable"
