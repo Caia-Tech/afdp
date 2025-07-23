@@ -1,0 +1,194 @@
+{
+  "test_scenarios": [
+    {
+      "id": "ai-model-deployment-001",
+      "name": "GPT-4 Fine-tuned Model Deployment",
+      "description": "Production deployment of a fine-tuned GPT-4 model for customer support",
+      "evidence_file": "ai-model-deployment/gpt-4-finetune-evidence.json",
+      "expected_outcomes": {
+        "notarization_success": true,
+        "validation_passes": true,
+        "rekor_entry_created": true
+      },
+      "test_endpoints": ["rest", "grpc", "pulsar"],
+      "load_test": {
+        "concurrent_requests": 10,
+        "duration_seconds": 60
+      }
+    },
+    {
+      "id": "ai-model-deployment-002", 
+      "name": "Vision Transformer Medical Imaging",
+      "description": "Edge deployment of a vision transformer for medical image classification",
+      "evidence_file": "ai-model-deployment/vision-transformer-evidence.json",
+      "expected_outcomes": {
+        "notarization_success": true,
+        "validation_passes": true,
+        "rekor_entry_created": true
+      },
+      "test_endpoints": ["rest", "grpc"],
+      "load_test": {
+        "concurrent_requests": 5,
+        "duration_seconds": 30
+      }
+    },
+    {
+      "id": "security-scan-001",
+      "name": "Critical Vulnerability Container Scan",
+      "description": "Security vulnerability scan revealing critical issues in container image",
+      "evidence_file": "security-scan/critical-vulnerability-scan.json",
+      "expected_outcomes": {
+        "notarization_success": true,
+        "validation_passes": true,
+        "rekor_entry_created": true
+      },
+      "test_endpoints": ["rest", "grpc", "pulsar"],
+      "load_test": {
+        "concurrent_requests": 15,
+        "duration_seconds": 45
+      }
+    },
+    {
+      "id": "security-scan-002",
+      "name": "Infrastructure Compliance Audit",
+      "description": "Comprehensive AWS infrastructure compliance scan with critical findings",
+      "evidence_file": "security-scan/infrastructure-compliance-scan.json",
+      "expected_outcomes": {
+        "notarization_success": true,
+        "validation_passes": true,
+        "rekor_entry_created": true
+      },
+      "test_endpoints": ["rest", "grpc"],
+      "load_test": {
+        "concurrent_requests": 8,
+        "duration_seconds": 60
+      }
+    },
+    {
+      "id": "financial-algorithm-001",
+      "name": "High-Frequency Trading Algorithm",
+      "description": "Production deployment of momentum-based HFT algorithm with regulatory approval",
+      "evidence_file": "financial-algorithm/high-frequency-trading-deployment.json",
+      "expected_outcomes": {
+        "notarization_success": true,
+        "validation_passes": true,
+        "rekor_entry_created": true
+      },
+      "test_endpoints": ["rest", "grpc", "pulsar"],
+      "load_test": {
+        "concurrent_requests": 20,
+        "duration_seconds": 90
+      }
+    },
+    {
+      "id": "financial-algorithm-002",
+      "name": "Credit Risk Scoring Model",
+      "description": "Basel III compliant credit risk model validation for consumer lending",
+      "evidence_file": "financial-algorithm/credit-risk-model.json",
+      "expected_outcomes": {
+        "notarization_success": true,
+        "validation_passes": true,
+        "rekor_entry_created": true
+      },
+      "test_endpoints": ["rest", "grpc"],
+      "load_test": {
+        "concurrent_requests": 12,
+        "duration_seconds": 60
+      }
+    },
+    {
+      "id": "healthcare-ai-001",
+      "name": "FDA-Cleared Radiology AI",
+      "description": "Clinical deployment of FDA 510(k) cleared chest X-ray analysis AI",
+      "evidence_file": "healthcare-ai/diagnostic-ai-deployment.json",
+      "expected_outcomes": {
+        "notarization_success": true,
+        "validation_passes": true,
+        "rekor_entry_created": true
+      },
+      "test_endpoints": ["rest", "grpc", "pulsar"],
+      "load_test": {
+        "concurrent_requests": 6,
+        "duration_seconds": 45
+      }
+    },
+    {
+      "id": "healthcare-ai-002",
+      "name": "Drug Discovery AI Model",
+      "description": "Pharmaceutical AI model for molecular property prediction in drug discovery",
+      "evidence_file": "healthcare-ai/drug-discovery-evidence.json",
+      "expected_outcomes": {
+        "notarization_success": true,
+        "validation_passes": true,
+        "rekor_entry_created": true
+      },
+      "test_endpoints": ["rest", "grpc"],
+      "load_test": {
+        "concurrent_requests": 4,
+        "duration_seconds": 30
+      }
+    },
+    {
+      "id": "supply-chain-001",
+      "name": "Semiconductor Batch Provenance",
+      "description": "Automotive-grade semiconductor manufacturing traceability and quality verification",
+      "evidence_file": "supply-chain/semiconductor-provenance.json",
+      "expected_outcomes": {
+        "notarization_success": true,
+        "validation_passes": true,
+        "rekor_entry_created": true
+      },
+      "test_endpoints": ["rest", "grpc", "pulsar"],
+      "load_test": {
+        "concurrent_requests": 8,
+        "duration_seconds": 60
+      }
+    },
+    {
+      "id": "supply-chain-002",
+      "name": "Pharmaceutical Cold Chain",
+      "description": "COVID-19 vaccine cold chain integrity monitoring during international shipment",
+      "evidence_file": "supply-chain/pharmaceutical-cold-chain.json",
+      "expected_outcomes": {
+        "notarization_success": true,
+        "validation_passes": true,
+        "rekor_entry_created": true
+      },
+      "test_endpoints": ["rest", "grpc", "pulsar"],
+      "load_test": {
+        "concurrent_requests": 10,
+        "duration_seconds": 45
+      }
+    }
+  ],
+  "global_test_config": {
+    "base_urls": {
+      "rest": "http://localhost:3030",
+      "grpc": "http://localhost:50051",
+      "monitoring": {
+        "prometheus": "http://localhost:9090",
+        "grafana": "http://localhost:3001",
+        "jaeger": "http://localhost:16686"
+      }
+    },
+    "pulsar_config": {
+      "broker_url": "pulsar://localhost:6650",
+      "topic": "persistent://public/default/afdp-evidence"
+    },
+    "test_timeouts": {
+      "notarization_timeout_seconds": 30,
+      "validation_timeout_seconds": 15,
+      "rekor_submission_timeout_seconds": 20
+    },
+    "logging": {
+      "level": "INFO",
+      "format": "json",
+      "correlation_id_header": "X-Correlation-ID"
+    },
+    "performance_thresholds": {
+      "max_response_time_ms": 5000,
+      "min_throughput_requests_per_second": 10,
+      "max_error_rate_percent": 1
+    }
+  }
+}

@@ -1,0 +1,137 @@
+{
+  "event_type": "supply_chain.cold_chain.validation",
+  "timestamp": "2024-01-23T13:25:00.000Z",
+  "actor": {
+    "actor_type": "cold_chain_validator",
+    "id": "cold-chain-monitor@pharmalogistics.com",
+    "auth_provider": "pharma_identity_provider"
+  },
+  "artifacts": [
+    {
+      "name": "vaccine-shipment-VS2024-0156.json",
+      "uri": "s3://pharma-cold-chain/shipments/2024/01/VS2024-0156/manifest.json",
+      "hash_sha256": "4567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1"
+    },
+    {
+      "name": "temperature-sensor-data.csv",
+      "uri": "s3://pharma-cold-chain/shipments/2024/01/VS2024-0156/temp-log.csv",
+      "hash_sha256": "567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef12"
+    },
+    {
+      "name": "gps-tracking-route.gpx",
+      "uri": "s3://pharma-cold-chain/shipments/2024/01/VS2024-0156/route.gpx",
+      "hash_sha256": "67890abcdef1234567890abcdef1234567890abcdef1234567890abcdef123"
+    },
+    {
+      "name": "customs-documentation.pdf",
+      "uri": "s3://pharma-cold-chain/shipments/2024/01/VS2024-0156/customs.pdf",
+      "hash_sha256": "7890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234"
+    }
+  ],
+  "metadata": {
+    "shipment_id": "VS2024-0156",
+    "product_info": {
+      "vaccine_name": "COVID-19 mRNA Vaccine",
+      "manufacturer": "VaccineTech Corp",
+      "lot_numbers": ["VT-C19-240118-A", "VT-C19-240118-B", "VT-C19-240119-A"],
+      "total_vials": 12000,
+      "dosage_strength": "30 mcg/0.3mL",
+      "expiration_dates": ["2024-07-18", "2024-07-18", "2024-07-19"]
+    },
+    "cold_chain_requirements": {
+      "storage_temperature_celsius": {
+        "min": -80,
+        "max": -60
+      },
+      "transport_temperature_celsius": {
+        "min": -25,
+        "max": -15
+      },
+      "humidity_percentage": {
+        "max": 60
+      },
+      "light_exposure": "protected",
+      "shock_sensitivity": "high"
+    },
+    "shipping_details": {
+      "origin": {
+        "facility": "VaccineTech Manufacturing",
+        "address": "Cambridge, MA, USA",
+        "gmp_certified": true,
+        "who_prequalified": true
+      },
+      "destination": {
+        "facility": "European Distribution Center",
+        "address": "Rotterdam, Netherlands",
+        "gdp_certified": true,
+        "regulatory_approved": true
+      },
+      "transit_time_hours": 16.5,
+      "carrier": "PharmaLogistics Express",
+      "flight_numbers": ["PL4567", "PL8901"]
+    },
+    "temperature_monitoring": {
+      "sensor_count": 12,
+      "reading_interval_minutes": 5,
+      "total_readings": 2376,
+      "temperature_excursions": 0,
+      "mean_temperature_celsius": -19.7,
+      "std_deviation_celsius": 1.2,
+      "min_recorded_celsius": -22.1,
+      "max_recorded_celsius": -17.3
+    },
+    "environmental_conditions": {
+      "humidity_readings": {
+        "mean_percentage": 42,
+        "max_percentage": 58,
+        "excursions": 0
+      },
+      "shock_events": {
+        "total_events": 3,
+        "max_g_force": 2.1,
+        "threshold_g_force": 5.0,
+        "all_within_limits": true
+      }
+    },
+    "regulatory_compliance": {
+      "gmp_guidelines": "compliant",
+      "gdp_guidelines": "compliant",
+      "ich_q1a": "compliant",
+      "usp_1079": "compliant",
+      "eu_directive_2001_83": "compliant",
+      "fda_21_cfr_part_211": "compliant"
+    },
+    "quality_assurance": {
+      "pre_shipment_inspection": "passed",
+      "packaging_integrity": "validated",
+      "seal_verification": "confirmed",
+      "documentation_review": "complete",
+      "courier_training": "certified"
+    },
+    "chain_of_custody": {
+      "custody_transfers": 4,
+      "signatures_collected": 4,
+      "handover_locations": [
+        "Manufacturing Facility",
+        "Logan International Airport",
+        "Amsterdam Schiphol Airport",
+        "Distribution Center"
+      ],
+      "custody_breaks": 0
+    },
+    "risk_assessment": {
+      "route_risk_level": "low",
+      "weather_conditions": "favorable",
+      "geopolitical_stability": "stable",
+      "infrastructure_quality": "excellent",
+      "contingency_plans": "activated_none"
+    },
+    "post_delivery_validation": {
+      "temperature_validation": "passed",
+      "visual_inspection": "no_damage",
+      "potency_testing_scheduled": "2024-01-24",
+      "quarantine_release": "pending_qa_approval",
+      "batch_disposition": "approved_for_distribution"
+    }
+  }
+}

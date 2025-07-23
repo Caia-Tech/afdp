@@ -1,0 +1,63 @@
+{
+  "event_type": "ai.model.deployment",
+  "timestamp": "2024-01-23T16:45:00.000Z",
+  "actor": {
+    "actor_type": "automated_pipeline",
+    "id": "tekton-mlops-pipeline",
+    "auth_provider": "kubernetes_sa"
+  },
+  "artifacts": [
+    {
+      "name": "vit-medical-imaging-v1.2.0.onnx",
+      "uri": "s3://ai-models-prod/vision/vit-medical/v1.2.0/model.onnx",
+      "hash_sha256": "7f8d9e2c4b6a3e1f5d9c7b5a3e1f5d9c7b5a3e1f5d9c7b5a3e1f5d9c7b5"
+    },
+    {
+      "name": "preprocessing-pipeline.pkl",
+      "uri": "s3://ai-models-prod/vision/vit-medical/v1.2.0/preprocessing.pkl",
+      "hash_sha256": "2c4b6a3e1f5d9c7b5a3e1f5d9c7b5a3e1f5d9c7b5a3e1f5d9c7b5a3e1"
+    },
+    {
+      "name": "model-card.pdf",
+      "uri": "s3://ai-models-prod/vision/vit-medical/v1.2.0/model-card.pdf",
+      "hash_sha256": "9e2c4b6a3e1f5d9c7b5a3e1f5d9c7b5a3e1f5d9c7b5a3e1f5d9c7b5a"
+    }
+  ],
+  "metadata": {
+    "model_id": "vit-medical-imaging-v1.2.0",
+    "model_type": "vision_transformer",
+    "use_case": "medical_image_classification",
+    "framework": "tensorflow",
+    "training_data": {
+      "dataset_name": "proprietary-medical-scans-2024",
+      "total_images": 2500000,
+      "classes": 150,
+      "augmentation_applied": true
+    },
+    "deployment_target": "edge-devices",
+    "optimization": {
+      "quantization": "int8",
+      "pruning_ratio": 0.3,
+      "model_size_mb": 125,
+      "inference_time_ms": 45
+    },
+    "accuracy_metrics": {
+      "top1_accuracy": 0.956,
+      "top5_accuracy": 0.994,
+      "auc_roc": 0.987,
+      "precision": 0.943,
+      "recall": 0.961
+    },
+    "regulatory_approval": {
+      "fda_510k": "pending",
+      "ce_mark": "approved",
+      "hipaa_compliant": true
+    },
+    "testing_results": {
+      "unit_tests_passed": 142,
+      "integration_tests_passed": 38,
+      "performance_benchmarks": "passed",
+      "security_scan": "passed"
+    }
+  }
+}

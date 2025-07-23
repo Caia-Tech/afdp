@@ -1,0 +1,47 @@
+# Build artifacts
+target/
+**/*.rs.bk
+
+# Git files
+.git/
+.gitignore
+
+# Development files
+.env
+.env.local
+*.swp
+*.swo
+*~
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Test coverage
+tarpaulin-report.html
+cobertura.xml
+
+# Profiling
+perf.data
+perf.data.old
+flamegraph.svg
+
+# Documentation build
+/target/doc/
+
+# Temporary files
+*.tmp
+*.log
+
+# Development database
+*.db
+*.sqlite
+
+# Backup files
+*.bak
+*.backup

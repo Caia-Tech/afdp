@@ -1,0 +1,133 @@
+[package]
+name = "afdp-notary"
+version = "0.1.0"
+edition = "2021"
+authors = ["Marvin Tutt <marvin.tutt@caiatech.com>"]
+license = "MIT"
+description = "Cryptographic notary service for AI-Ready Forensic Deployment Pipeline"
+repository = "https://github.com/caiatech/afdp-notary"
+keywords = ["cryptography", "notary", "transparency-log", "forensics", "audit"]
+categories = ["cryptography", "authentication"]
+
+[dependencies]
+# Async runtime
+tokio = { version = "1.37", features = ["full"] }
+async-trait = "0.1"
+
+# Error handling
+thiserror = "1.0"
+anyhow = "1.0"
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# Cryptography
+ring = "0.17"  # For signing operations
+base64 = "0.22"
+
+# HTTP clients
+reqwest = { version = "0.12", features = ["json", "rustls-tls"] }
+
+# Logging
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# Time handling
+chrono = { version = "0.4", features = ["serde"] }
+
+# Configuration
+config = "0.14"
+
+# HashiCorp Vault client
+vaultrs = "0.7"
+
+# UUID generation
+uuid = { version = "1.8", features = ["v4", "serde"] }
+
+# Temporal workflow engine (optional - requires external server)
+# temporal-sdk = { version = "0.1", optional = true }
+# temporal-sdk-core = { version = "0.1", optional = true }
+
+# HTTP server framework
+axum = "0.6"
+hyper = { version = "0.14", features = ["full"] }
+tower = "0.4"
+tower-http = { version = "0.4", features = ["cors", "trace"] }
+
+# OpenAPI documentation
+utoipa = { version = "4.0", features = ["axum_extras"] }
+utoipa-swagger-ui = { version = "4.0", features = ["axum"] }
+
+# gRPC and Protocol Buffers
+tonic = "0.12"
+prost = "0.13"
+prost-types = "0.13"
+tokio-stream = "0.1"
+
+# Apache Pulsar for event streaming (requires Rust 1.85+ for compatibility)
+# pulsar = "6.3"
+# futures-util = "0.3"
+
+[build-dependencies]
+# Protocol buffer compilation
+tonic-build = "0.12"
+
+[dev-dependencies]
+# Testing utilities
+mockall = "0.12"
+wiremock = "0.6"
+test-log = "0.2"
+pretty_assertions = "1.4"
+hex = "0.4"
+
+# Async testing
+tokio-test = "0.4"
+
+[features]
+default = []
+integration-tests = []
+
+# Examples for gRPC client usage
+[[example]]
+name = "simple-signing"
+path = "examples/grpc-client/simple-signing.rs"
+
+[[example]]
+name = "health-check"
+path = "examples/grpc-client/health-check.rs"
+
+[[example]]
+name = "approval-workflow"
+path = "examples/grpc-client/approval-workflow.rs"
+
+[lib]
+name = "afdp_notary"
+path = "src/lib.rs"
+
+[[bin]]
+name = "afdp-notary-server"
+path = "src/bin/server.rs"
+required-features = []
+
+[[bin]]
+name = "afdp-notary-rest"
+path = "src/bin/rest-server.rs"
+required-features = []
+
+[[bin]]
+name = "afdp-notary-grpc"
+path = "src/bin/grpc-server.rs"
+required-features = []
+
+# Pulsar consumer binary (requires Rust 1.85+ for compatibility)
+# [[bin]]
+# name = "afdp-notary-pulsar"
+# path = "src/bin/pulsar-consumer.rs"
+# required-features = []
+
+[profile.release]
+lto = true
+codegen-units = 1
+opt-level = 3
+strip = true

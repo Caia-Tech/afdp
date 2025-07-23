@@ -1,0 +1,99 @@
+{
+  "event_type": "healthcare.ai.deployment",
+  "timestamp": "2024-01-23T08:20:00.000Z",
+  "actor": {
+    "actor_type": "medical_device_engineer",
+    "id": "mde-team@medtech.com",
+    "auth_provider": "medical_idp"
+  },
+  "artifacts": [
+    {
+      "name": "radiology-cnn-v2.1.0.h5",
+      "uri": "s3://medical-ai-models/radiology/cnn-chest-xray/v2.1.0/model.h5",
+      "hash_sha256": "567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef123"
+    },
+    {
+      "name": "dicom-preprocessing.py",
+      "uri": "s3://medical-ai-models/radiology/cnn-chest-xray/v2.1.0/preprocessing.py",
+      "hash_sha256": "7890abcdef1234567890abcdef1234567890abcdef1234567890abcdef12345"
+    },
+    {
+      "name": "clinical-validation-report.pdf",
+      "uri": "s3://medical-ai-models/radiology/cnn-chest-xray/v2.1.0/clinical-study.pdf",
+      "hash_sha256": "90abcdef1234567890abcdef1234567890abcdef1234567890abcdef123456"
+    },
+    {
+      "name": "fda-submission-package.zip",
+      "uri": "s3://medical-ai-models/radiology/cnn-chest-xray/v2.1.0/fda-510k.zip",
+      "hash_sha256": "abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567"
+    }
+  ],
+  "metadata": {
+    "device_id": "RadiologyAI-ChestXRay-v2.1.0",
+    "device_classification": "class_ii_medical_device",
+    "intended_use": "computer_aided_detection_chest_abnormalities",
+    "target_pathologies": [
+      "pneumonia",
+      "pneumothorax",
+      "pleural_effusion",
+      "cardiomegaly",
+      "lung_nodules",
+      "consolidation"
+    ],
+    "clinical_performance": {
+      "sensitivity": 0.921,
+      "specificity": 0.887,
+      "ppv": 0.845,
+      "npv": 0.943,
+      "auc_roc": 0.934,
+      "f1_score": 0.882
+    },
+    "validation_cohort": {
+      "patient_count": 12450,
+      "image_count": 18700,
+      "demographics": {
+        "age_range": "18-89",
+        "gender_distribution": "52% female, 48% male",
+        "ethnic_diversity": "representative"
+      },
+      "clinical_sites": 15,
+      "countries": ["USA", "Canada", "UK", "Germany"]
+    },
+    "regulatory_status": {
+      "fda_510k": "K240123456",
+      "fda_clearance_date": "2024-01-15",
+      "ce_mark": "approved",
+      "health_canada": "approved",
+      "iso_13485": "certified",
+      "iso_14971": "compliant"
+    },
+    "quality_management": {
+      "risk_management_file": "IEC 62304 compliant",
+      "software_lifecycle": "V-model",
+      "verification_testing": "passed",
+      "validation_testing": "passed",
+      "cybersecurity_assessment": "completed"
+    },
+    "deployment_environment": {
+      "hospital_pacs_integration": true,
+      "hl7_fhir_compliant": true,
+      "hipaa_compliant": true,
+      "gdpr_compliant": true,
+      "audit_logging": "comprehensive",
+      "backup_recovery": "validated"
+    },
+    "clinical_workflow": {
+      "integration_points": ["PACS", "RIS", "EMR"],
+      "radiologist_workflow": "parallel_reading",
+      "notification_system": "DICOM_SR",
+      "reporting_format": "structured_report",
+      "turnaround_time_minutes": 3.2
+    },
+    "post_market_surveillance": {
+      "monitoring_plan": "continuous",
+      "adverse_event_reporting": "enabled",
+      "performance_trending": "automated",
+      "update_mechanism": "OTA_with_approval"
+    }
+  }
+}

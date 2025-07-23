@@ -1,0 +1,83 @@
+{
+  "event_type": "financial.algorithm.deployment",
+  "timestamp": "2024-01-23T05:30:00.000Z",
+  "actor": {
+    "actor_type": "quant_trader",
+    "id": "trading-team-lead@company.com",
+    "auth_provider": "active_directory"
+  },
+  "artifacts": [
+    {
+      "name": "momentum-strategy-v4.2.1.jar",
+      "uri": "s3://trading-algorithms/momentum/v4.2.1/algorithm.jar",
+      "hash_sha256": "f6789012345678901234567890abcdef1234567890abcdef1234567890abcdef"
+    },
+    {
+      "name": "risk-parameters.json",
+      "uri": "s3://trading-algorithms/momentum/v4.2.1/risk-config.json",
+      "hash_sha256": "78901234567890abcdef1234567890abcdef1234567890abcdef1234567890ab"
+    },
+    {
+      "name": "backtesting-results.csv",
+      "uri": "s3://trading-algorithms/momentum/v4.2.1/backtest-2023.csv",
+      "hash_sha256": "901234567890abcdef1234567890abcdef1234567890abcdef1234567890abcd"
+    },
+    {
+      "name": "regulatory-approval.pdf",
+      "uri": "s3://trading-algorithms/momentum/v4.2.1/sec-approval.pdf",
+      "hash_sha256": "1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
+    }
+  ],
+  "metadata": {
+    "algorithm_id": "momentum-hft-v4.2.1",
+    "strategy_type": "momentum_trading",
+    "asset_classes": ["equities", "options", "futures"],
+    "markets": ["NYSE", "NASDAQ", "CME", "CBOE"],
+    "deployment_environment": "production",
+    "trading_session": "us_regular_hours",
+    "capital_allocation": {
+      "max_daily_pnl_usd": 5000000,
+      "max_position_size_usd": 1000000,
+      "var_limit_usd": 2500000,
+      "stress_test_limit_usd": 7500000
+    },
+    "risk_controls": {
+      "max_drawdown_percent": 15,
+      "position_concentration_limit": 0.1,
+      "sector_exposure_limit": 0.25,
+      "correlation_limit": 0.7,
+      "liquidity_threshold_days": 3
+    },
+    "performance_metrics": {
+      "backtesting_period": "2023-01-01_to_2023-12-31",
+      "annual_return_percent": 23.7,
+      "sharpe_ratio": 2.14,
+      "max_drawdown_percent": 8.9,
+      "win_rate": 0.64,
+      "profit_factor": 1.89,
+      "calmar_ratio": 2.66
+    },
+    "regulatory_compliance": {
+      "mifid_ii": "compliant",
+      "sec_rule_15c3_5": "compliant",
+      "cftc_reg_at": "compliant",
+      "finra_approved": true,
+      "approval_date": "2024-01-20"
+    },
+    "model_validation": {
+      "independent_validation": true,
+      "validator": "quant-risk-team",
+      "validation_date": "2024-01-19",
+      "model_tier": "tier_1_critical",
+      "stress_test_scenarios": 15,
+      "monte_carlo_simulations": 100000
+    },
+    "deployment_checks": {
+      "circuit_breakers": "enabled",
+      "kill_switch": "enabled",
+      "position_limits": "enforced",
+      "market_data_feeds": ["bloomberg", "refinitiv"],
+      "latency_sla_microseconds": 150
+    }
+  }
+}

@@ -1,0 +1,312 @@
+syntax = "proto3";
+
+package afdp.notary.v1;
+
+import "google/protobuf/timestamp.proto";
+import "google/protobuf/struct.proto";
+
+// AFDP Notary Service
+// Provides cryptographic notarization services for AI deployment pipeline events
+service NotaryService {
+  // Sign evidence package using simple workflow
+  rpc SignEvidence(SignEvidenceRequest) returns (SignEvidenceResponse);
+  
+  // Sign evidence with approval workflow (requires multiple approvers)
+  rpc SignEvidenceWithApproval(SignEvidenceWithApprovalRequest) returns (SignEvidenceWithApprovalResponse);
+  
+  // Batch sign multiple evidence packages for efficiency
+  rpc SignEvidenceBatch(SignEvidenceBatchRequest) returns (SignEvidenceBatchResponse);
+  
+  // Get the status of a running workflow
+  rpc GetWorkflowStatus(GetWorkflowStatusRequest) returns (GetWorkflowStatusResponse);
+  
+  // Validate a signed evidence package
+  rpc ValidateEvidence(ValidateEvidenceRequest) returns (ValidateEvidenceResponse);
+  
+  // Get notarization receipt for a completed workflow
+  rpc GetNotarizationReceipt(GetNotarizationReceiptRequest) returns (GetNotarizationReceiptResponse);
+  
+  // List workflows with optional filtering
+  rpc ListWorkflows(ListWorkflowsRequest) returns (ListWorkflowsResponse);
+  
+  // Service health check
+  rpc HealthCheck(HealthRequest) returns (HealthResponse);
+  
+}
+
+// Core data structures
+
+// Evidence package containing event data to be notarized
+message EvidencePackage {
+  // Evidence package specification version
+  string spec_version = 1;
+  // UTC timestamp when the evidence was created
+  google.protobuf.Timestamp timestamp_utc = 2;
+  // Type of event being notarized (e.g., "model.deployment.completed")
+  string event_type = 3;
+  // Actor who initiated the event
+  Actor actor = 4;
+  // Digital artifacts associated with the event
+  repeated Artifact artifacts = 5;
+  // Additional metadata about the event
+  google.protobuf.Struct metadata = 6;
+}
+
+// Actor information (user, service, or system that initiated an event)
+message Actor {
+  // Type of actor (human_user, service, workflow, etc.)
+  string actor_type = 1;
+  // Unique identifier for the actor
+  string id = 2;
+  // Authentication provider used (optional)
+  string auth_provider = 3;
+}
+
+// Digital artifact associated with an event
+message Artifact {
+  // Human-readable name of the artifact
+  string name = 1;
+  // URI where the artifact can be accessed (optional)
+  string uri = 2;
+  // SHA256 hash of the artifact for integrity verification
+  string hash_sha256 = 3;
+}
+
+// Cryptographic receipt proving notarization
+message NotarizationReceipt {
+  // SHA256 hash of the evidence package that was signed
+  string evidence_package_hash = 1;
+  // Unique ID for this entry in the Rekor transparency log
+  string rekor_log_id = 2;
+  // URL of the Rekor server where this was logged
+  string rekor_server_url = 3;
+  // Base64-encoded signature from the Notary Service
+  string signature_b64 = 4;
+  // Base64-encoded public key used for signing
+  string public_key_b64 = 5;
+  // Integration timestamp from Rekor
+  int64 integrated_time = 6;
+  // Log index in Rekor
+  int64 log_index = 7;
+}
+
+// Request/Response messages
+
+// Sign evidence request
+message SignEvidenceRequest {
+  // Evidence package to be signed
+  EvidencePackage evidence_package = 1;
+}
+
+// Sign evidence response
+message SignEvidenceResponse {
+  // Workflow ID for tracking the signing process
+  string workflow_id = 1;
+  // Notarization receipt (if completed synchronously)
+  NotarizationReceipt receipt = 2;
+  // Current status of the signing process
+  WorkflowStatus status = 3;
+}
+
+// Sign evidence with approval request
+message SignEvidenceWithApprovalRequest {
+  // Evidence package to be signed
+  EvidencePackage evidence_package = 1;
+  // List of required approvers (email addresses or user IDs)
+  repeated string approvers = 2;
+}
+
+// Sign evidence with approval response
+message SignEvidenceWithApprovalResponse {
+  // Workflow ID for tracking the approval process
+  string workflow_id = 1;
+  // Current status of the approval process
+  WorkflowStatus status = 2;
+  // Status of each required approval
+  repeated ApprovalStatus approval_statuses = 3;
+}
+
+// Approval status for individual approver
+message ApprovalStatus {
+  // Email or ID of the approver
+  string approver = 1;
+  // Current approval status
+  ApprovalState status = 2;
+  // Timestamp of the approval action
+  google.protobuf.Timestamp timestamp = 3;
+  // Optional comment from the approver
+  string comment = 4;
+}
+
+// Approval state enumeration
+enum ApprovalState {
+  APPROVAL_STATE_UNSPECIFIED = 0;
+  APPROVAL_STATE_PENDING = 1;
+  APPROVAL_STATE_APPROVED = 2;
+  APPROVAL_STATE_REJECTED = 3;
+}
+
+// Batch sign request
+message SignEvidenceBatchRequest {
+  // Multiple evidence packages to be signed in batch
+  repeated EvidencePackage evidence_packages = 1;
+}
+
+// Batch sign response
+message SignEvidenceBatchResponse {
+  // Batch workflow ID for tracking the entire batch
+  string batch_workflow_id = 1;
+  // Individual results for each evidence package
+  repeated SignEvidenceResponse results = 2;
+  // Overall batch status
+  WorkflowStatus status = 3;
+}
+
+// Get workflow status request
+message GetWorkflowStatusRequest {
+  // Workflow ID to check
+  string workflow_id = 1;
+}
+
+// Get workflow status response
+message GetWorkflowStatusResponse {
+  // Workflow ID
+  string workflow_id = 1;
+  // Current workflow status
+  WorkflowStatus status = 2;
+  // When the workflow was created
+  google.protobuf.Timestamp created_at = 3;
+  // When the workflow completed (if applicable)
+  google.protobuf.Timestamp completed_at = 4;
+  // Error message (if failed)
+  string error_message = 5;
+  // Workflow result data
+  google.protobuf.Struct result = 6;
+}
+
+// Workflow status enumeration
+enum WorkflowStatus {
+  WORKFLOW_STATUS_UNSPECIFIED = 0;
+  WORKFLOW_STATUS_PENDING = 1;
+  WORKFLOW_STATUS_RUNNING = 2;
+  WORKFLOW_STATUS_COMPLETED = 3;
+  WORKFLOW_STATUS_FAILED = 4;
+  WORKFLOW_STATUS_CANCELLED = 5;
+}
+
+// Validate evidence request
+message ValidateEvidenceRequest {
+  // Evidence package to validate
+  EvidencePackage evidence_package = 1;
+  // Signature to validate against
+  string signature = 2;
+}
+
+// Validate evidence response
+message ValidateEvidenceResponse {
+  // Whether the evidence package is valid
+  bool is_valid = 1;
+  // Validation error message (if invalid)
+  string validation_error = 2;
+  // Detailed validation results
+  ValidationResult validation_result = 3;
+}
+
+// Detailed validation results
+message ValidationResult {
+  // Whether the cryptographic signature is valid
+  bool signature_valid = 1;
+  // Whether the evidence package hash is valid
+  bool evidence_hash_valid = 2;
+  // Whether the Rekor transparency log entry is valid
+  bool rekor_entry_valid = 3;
+  // Whether the timestamp is valid
+  bool timestamp_valid = 4;
+  // Any validation warnings
+  repeated string warnings = 5;
+}
+
+// Get notarization receipt request
+message GetNotarizationReceiptRequest {
+  // Workflow ID
+  string workflow_id = 1;
+}
+
+// Get notarization receipt response
+message GetNotarizationReceiptResponse {
+  // Notarization receipt (if found)
+  NotarizationReceipt receipt = 1;
+  // Whether the receipt was found
+  bool found = 2;
+}
+
+// List workflows request
+message ListWorkflowsRequest {
+  // Maximum number of workflows to return
+  int32 page_size = 1;
+  // Pagination token from previous request
+  string page_token = 2;
+  // Filter by workflow status (optional)
+  WorkflowStatus status_filter = 3;
+  // Filter by start time (optional)
+  google.protobuf.Timestamp start_time = 4;
+  // Filter by end time (optional)
+  google.protobuf.Timestamp end_time = 5;
+}
+
+// List workflows response
+message ListWorkflowsResponse {
+  // List of workflow summaries
+  repeated WorkflowSummary workflows = 1;
+  // Token for the next page of results
+  string next_page_token = 2;
+  // Total number of workflows matching the criteria
+  int32 total_count = 3;
+}
+
+// Workflow summary information
+message WorkflowSummary {
+  // Workflow ID
+  string workflow_id = 1;
+  // Type of workflow (simple_signing, approval_signing, batch_signing)
+  string workflow_type = 2;
+  // Current workflow status
+  WorkflowStatus status = 3;
+  // When the workflow was created
+  google.protobuf.Timestamp created_at = 4;
+  // When the workflow completed (if applicable)
+  google.protobuf.Timestamp completed_at = 5;
+  // Type of event being processed
+  string event_type = 6;
+  // ID of the actor who initiated the workflow
+  string actor_id = 7;
+}
+
+// Health check request (empty message)
+message HealthRequest {
+}
+
+// Health check response
+message HealthResponse {
+  // Service status (healthy, unhealthy, degraded)
+  string status = 1;
+  // Service version
+  string version = 2;
+  // Uptime in seconds
+  int64 uptime_seconds = 3;
+  // Status of dependencies
+  repeated DependencyStatus dependencies = 4;
+}
+
+// Dependency status information
+message DependencyStatus {
+  // Dependency name (vault, rekor, temporal)
+  string name = 1;
+  // Whether the dependency is healthy
+  bool healthy = 2;
+  // Response time in milliseconds (if available)
+  int64 response_time_ms = 3;
+  // Error message (if unhealthy)
+  string error = 4;
+}
+

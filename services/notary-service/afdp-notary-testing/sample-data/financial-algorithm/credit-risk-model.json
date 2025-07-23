@@ -1,0 +1,84 @@
+{
+  "event_type": "financial.model.validation",
+  "timestamp": "2024-01-23T11:45:00.000Z",
+  "actor": {
+    "actor_type": "model_validator",
+    "id": "risk-validation-team",
+    "auth_provider": "ldap"
+  },
+  "artifacts": [
+    {
+      "name": "credit-scoring-model-v3.1.pkl",
+      "uri": "s3://risk-models/credit/v3.1/model.pkl",
+      "hash_sha256": "234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1"
+    },
+    {
+      "name": "feature-engineering-pipeline.py",
+      "uri": "s3://risk-models/credit/v3.1/features.py",
+      "hash_sha256": "4567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef12"
+    },
+    {
+      "name": "validation-report.pdf",
+      "uri": "s3://risk-models/credit/v3.1/validation-report.pdf",
+      "hash_sha256": "67890abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234"
+    }
+  ],
+  "metadata": {
+    "model_id": "credit-risk-scoring-v3.1",
+    "model_type": "gradient_boosting_classifier",
+    "use_case": "consumer_credit_underwriting",
+    "regulatory_framework": "basel_iii",
+    "training_data": {
+      "dataset_name": "consumer-credit-2020-2023",
+      "record_count": 2750000,
+      "feature_count": 187,
+      "target_variable": "default_12m",
+      "data_quality_score": 0.94
+    },
+    "model_performance": {
+      "auc_roc": 0.847,
+      "gini_coefficient": 0.694,
+      "ks_statistic": 0.52,
+      "precision_at_10_percent": 0.73,
+      "recall_at_10_percent": 0.41,
+      "population_stability_index": 0.03
+    },
+    "fairness_metrics": {
+      "demographic_parity": 0.89,
+      "equalized_odds": 0.91,
+      "calibration_by_group": {
+        "age_groups": [0.93, 0.92, 0.94, 0.89],
+        "income_groups": [0.91, 0.93, 0.95, 0.88],
+        "geographic_regions": [0.92, 0.94, 0.90, 0.93]
+      }
+    },
+    "regulatory_validation": {
+      "sr_11_7_compliant": true,
+      "fed_guidance_compliant": true,
+      "ecb_guidelines_met": true,
+      "discriminatory_testing": "passed",
+      "explainability_score": 0.78
+    },
+    "stress_testing": {
+      "recession_scenario": {
+        "default_rate_increase": 2.3,
+        "model_stability": "stable"
+      },
+      "interest_rate_shock": {
+        "rate_increase_bps": 200,
+        "performance_degradation": 0.02
+      },
+      "economic_downturn": {
+        "gdp_decline_percent": -5,
+        "model_recalibration_required": false
+      }
+    },
+    "implementation": {
+      "deployment_date": "2024-02-01",
+      "champion_challenger_setup": true,
+      "monitoring_frequency": "daily",
+      "retraining_schedule": "quarterly",
+      "performance_alerts": ["psi > 0.1", "auc < 0.8", "volume_change > 20%"]
+    }
+  }
+}

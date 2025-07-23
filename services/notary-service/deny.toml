@@ -1,0 +1,82 @@
+# cargo-deny configuration for AFDP Notary Service
+# This file configures dependency checking for security, licenses, and supply chain integrity
+
+[graph]
+# Lint level for when multiple versions of the same crate are detected
+multiple-versions = "warn"
+# Allow wildcard dependencies in private crates
+wildcards = { allow = ["afdp-notary"] }
+
+[advisories]
+# The advisories section is used to detect vulnerabilities in dependencies
+version = 2
+# Use the RustSec Advisory Database
+database = "https://github.com/RustSec/advisory-db"
+# Warn on advisories that have been yanked
+yanked = "warn"
+# Deny any crates with security vulnerabilities
+vulnerability = "deny"
+# Warn on unmaintained crates
+unmaintained = "warn"
+# Warn if a crate has not been updated for 3 years
+unsound = "warn"
+# Allow specific advisories that have been reviewed
+ignore = [
+    # Example: "RUSTSEC-2020-0001",
+]
+
+[licenses]
+# Deny crates with no license information
+unlicensed = "deny"
+# Allow these licenses (common in Rust ecosystem and government-friendly)
+allow = [
+    "MIT",
+    "Apache-2.0",
+    "Apache-2.0 WITH LLVM-exception",
+    "BSD-2-Clause",
+    "BSD-3-Clause",
+    "ISC",
+    "Unicode-DFS-2016",
+    "CC0-1.0",
+    "MPL-2.0",  # Mozilla Public License
+]
+# List of licenses to deny
+deny = [
+    "GPL-2.0",
+    "GPL-3.0",
+    "AGPL-3.0",
+    "LGPL-2.0",
+    "LGPL-2.1",
+    "LGPL-3.0",
+]
+# Warn on copyleft licenses that might require disclosure
+copyleft = "warn"
+# Allow licenses only for specific crates
+exceptions = [
+    # Example: { allow = ["GPL-3.0"], crate = "some-special-crate" },
+]
+
+[sources]
+# Warn about crates from unknown registries
+unknown-registry = "warn"
+# Warn about crates from unknown git sources
+unknown-git = "warn"
+# Allow github.com and gitlab.com
+allow-git = ["https://github.com/", "https://gitlab.com/"]
+
+[bans]
+# Deny specific crates
+deny = [
+    # Example: { crate = "openssl", use-instead = "rustls" },
+]
+# Skip certain crates when checking for duplicates
+skip = [
+    # Example: { crate = "windows-sys", reason = "Several crates depend on different versions" },
+]
+# Allow certain wildcard dependencies
+allow-wildcard-paths = false
+
+# Feature-specific configuration
+[bans.build]
+# Allow procedural macros in build scripts
+allow-build-scripts = ["cc", "cmake", "bindgen", "pkg-config", "autocfg"]

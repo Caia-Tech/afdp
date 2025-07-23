@@ -1,0 +1,104 @@
+{
+  "event_type": "pharma.ai.model.validation",
+  "timestamp": "2024-01-23T15:10:00.000Z",
+  "actor": {
+    "actor_type": "computational_biologist",
+    "id": "comp-bio-team@pharma.com",
+    "auth_provider": "enterprise_sso"
+  },
+  "artifacts": [
+    {
+      "name": "molecular-property-prediction-v1.5.pytorch",
+      "uri": "s3://drug-discovery-ai/molecular-props/v1.5/model.pytorch",
+      "hash_sha256": "bcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890"
+    },
+    {
+      "name": "chemical-features-encoder.pkl",
+      "uri": "s3://drug-discovery-ai/molecular-props/v1.5/encoder.pkl",
+      "hash_sha256": "cdef1234567890abcdef1234567890abcdef1234567890abcdef12345678901"
+    },
+    {
+      "name": "assay-validation-results.xlsx",
+      "uri": "s3://drug-discovery-ai/molecular-props/v1.5/assay-validation.xlsx",
+      "hash_sha256": "def1234567890abcdef1234567890abcdef1234567890abcdef123456789012"
+    }
+  ],
+  "metadata": {
+    "model_id": "molecular-admet-prediction-v1.5",
+    "research_program": "oncology-kinase-inhibitors",
+    "target_properties": [
+      "blood_brain_barrier_permeability",
+      "human_hepatotoxicity",
+      "cyp3a4_inhibition",
+      "plasma_protein_binding",
+      "aqueous_solubility",
+      "bioavailability"
+    ],
+    "training_data": {
+      "compound_count": 185000,
+      "assay_endpoints": 47,
+      "data_sources": ["chembl", "proprietary_screening", "literature"],
+      "molecular_descriptors": 2048,
+      "fingerprint_type": "ECFP4"
+    },
+    "model_architecture": {
+      "type": "graph_neural_network",
+      "layers": ["GCN", "GAT", "MLP"],
+      "parameters": 2.7e6,
+      "input_representation": "molecular_graph",
+      "output_type": "multi_task_regression"
+    },
+    "performance_metrics": {
+      "r2_scores": {
+        "bbb_permeability": 0.73,
+        "hepatotoxicity": 0.81,
+        "cyp3a4_inhibition": 0.67,
+        "protein_binding": 0.84,
+        "solubility": 0.78,
+        "bioavailability": 0.69
+      },
+      "mae_values": {
+        "bbb_permeability": 0.23,
+        "hepatotoxicity": 0.18,
+        "cyp3a4_inhibition": 0.31,
+        "protein_binding": 0.14,
+        "solubility": 0.27,
+        "bioavailability": 0.29
+      }
+    },
+    "experimental_validation": {
+      "test_compounds": 450,
+      "correlation_with_experiments": 0.79,
+      "prospective_validation": "ongoing",
+      "hit_rate_improvement": 2.3,
+      "false_positive_rate": 0.12
+    },
+    "chemical_space": {
+      "molecular_weight_range": "150-800 Da",
+      "logp_range": "-2 to 6",
+      "tpsa_range": "0-200 Ų",
+      "rotatable_bonds": "0-15",
+      "hbd_hba_range": "0-10 each"
+    },
+    "deployment_integration": {
+      "chemoinformatics_platform": "Pipeline Pilot",
+      "molecular_database": "ChemDraw Direct",
+      "hts_integration": true,
+      "virtual_screening": "enabled",
+      "batch_processing": "supported"
+    },
+    "intellectual_property": {
+      "patent_landscape_analyzed": true,
+      "freedom_to_operate": "cleared",
+      "invention_disclosures": 3,
+      "confidentiality_level": "highly_confidential"
+    },
+    "regulatory_considerations": {
+      "gcp_compliant": true,
+      "data_integrity": "ALCOA+",
+      "audit_trail": "complete",
+      "validation_protocol": "IQ_OQ_PQ",
+      "computer_system_validation": "completed"
+    }
+  }
+}

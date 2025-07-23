@@ -1,0 +1,74 @@
+{
+  "event_type": "security.compliance.scan",
+  "timestamp": "2024-01-23T12:00:00.000Z",
+  "actor": {
+    "actor_type": "compliance_scanner",
+    "id": "cloud-custodian-scanner",
+    "auth_provider": "aws_iam_role"
+  },
+  "artifacts": [
+    {
+      "name": "aws-compliance-report.json",
+      "uri": "s3://compliance-reports/2024/01/23/aws-full-scan.json",
+      "hash_sha256": "d4e5f6789012345678901234567890abcdef1234567890abcdef1234567890ab"
+    },
+    {
+      "name": "resource-inventory.csv",
+      "uri": "s3://compliance-reports/2024/01/23/inventory.csv",
+      "hash_sha256": "e5f67890123456789012345678901234567890abcdef1234567890abcdef1234"
+    }
+  ],
+  "metadata": {
+    "scan_id": "compliance-2024-01-23-12-00",
+    "scan_scope": "aws_production_account",
+    "aws_account_id": "123456789012",
+    "regions_scanned": ["us-east-1", "us-west-2", "eu-west-1"],
+    "resource_count": {
+      "ec2_instances": 342,
+      "rds_databases": 28,
+      "s3_buckets": 156,
+      "lambda_functions": 89,
+      "iam_roles": 234
+    },
+    "compliance_frameworks": {
+      "aws_well_architected": {
+        "score": 87,
+        "pillar_scores": {
+          "operational_excellence": 92,
+          "security": 78,
+          "reliability": 89,
+          "performance_efficiency": 91,
+          "cost_optimization": 85
+        }
+      },
+      "cis_aws_foundations": {
+        "version": "1.5.0",
+        "passed": 178,
+        "failed": 22,
+        "not_applicable": 15
+      },
+      "soc2": {
+        "compliant": false,
+        "missing_controls": ["CC6.1", "CC6.7", "CC7.2"]
+      }
+    },
+    "critical_findings": [
+      {
+        "resource_type": "s3_bucket",
+        "resource_id": "prod-data-lake-raw",
+        "issue": "Public read access enabled",
+        "severity": "CRITICAL",
+        "remediation": "Disable public access, enable bucket policies"
+      },
+      {
+        "resource_type": "rds_instance",
+        "resource_id": "prod-customer-db-01",
+        "issue": "Encryption at rest disabled",
+        "severity": "HIGH",
+        "remediation": "Enable RDS encryption with KMS key"
+      }
+    ],
+    "auto_remediation_actions": 7,
+    "manual_review_required": 15
+  }
+}

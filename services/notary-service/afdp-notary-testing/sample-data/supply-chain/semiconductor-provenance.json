@@ -1,0 +1,110 @@
+{
+  "event_type": "supply_chain.provenance.verification",
+  "timestamp": "2024-01-23T10:30:00.000Z",
+  "actor": {
+    "actor_type": "supply_chain_auditor",
+    "id": "sc-audit-team@electronics.com",
+    "auth_provider": "supply_chain_sso"
+  },
+  "artifacts": [
+    {
+      "name": "semiconductor-batch-A4567.json",
+      "uri": "s3://supply-chain-records/semiconductors/2024/batch-A4567/manifest.json",
+      "hash_sha256": "ef1234567890abcdef1234567890abcdef1234567890abcdef1234567890abc"
+    },
+    {
+      "name": "wafer-fabrication-log.csv",
+      "uri": "s3://supply-chain-records/semiconductors/2024/batch-A4567/fab-log.csv",
+      "hash_sha256": "f1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcd"
+    },
+    {
+      "name": "quality-inspection-report.pdf",
+      "uri": "s3://supply-chain-records/semiconductors/2024/batch-A4567/qa-report.pdf",
+      "hash_sha256": "1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcde"
+    },
+    {
+      "name": "chain-of-custody.xml",
+      "uri": "s3://supply-chain-records/semiconductors/2024/batch-A4567/custody.xml",
+      "hash_sha256": "234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
+    }
+  ],
+  "metadata": {
+    "batch_id": "SEMI-A4567-2024",
+    "product_family": "automotive_grade_microcontrollers",
+    "part_numbers": ["MCU-AV-32K-QFN48", "MCU-AV-64K-QFN64", "MCU-AV-128K-BGA100"],
+    "quantity": {
+      "wafers_processed": 25,
+      "dies_per_wafer": 1247,
+      "total_dies": 31175,
+      "good_dies": 29234,
+      "yield_percentage": 93.8
+    },
+    "manufacturing_facility": {
+      "name": "GlobalSemi Fab 7",
+      "location": "Dresden, Germany",
+      "iso_certifications": ["ISO 9001:2015", "ISO 14001:2015", "ISO 45001:2018"],
+      "automotive_certifications": ["ISO/TS 16949", "AEC-Q100"],
+      "security_clearance": "NATO_RESTRICTED"
+    },
+    "materials_traceability": {
+      "silicon_wafers": {
+        "supplier": "PureSilicon Inc.",
+        "lot_number": "PSI-240115-07",
+        "purity_grade": "99.9999%",
+        "origin_country": "Japan"
+      },
+      "photoresist": {
+        "supplier": "ChemProcess Ltd.",
+        "batch_number": "PR-AZ-4620-B",
+        "expiry_date": "2024-06-15"
+      },
+      "bonding_wire": {
+        "material": "gold_25_micron",
+        "supplier": "PreciousMetals Corp.",
+        "certificate_number": "PM-AU-2024-0034"
+      }
+    },
+    "process_parameters": {
+      "lithography_nodes": ["32nm", "28nm"],
+      "temperature_profiles": "validated_per_AEC_Q100",
+      "etching_chemistry": "proprietary_blend_v3.2",
+      "annealing_cycles": 4,
+      "metallization_layers": 8
+    },
+    "quality_metrics": {
+      "electrical_test_pass_rate": 0.987,
+      "burn_in_test_duration_hours": 168,
+      "temperature_cycling_cycles": 1000,
+      "humidity_test_duration_hours": 1000,
+      "vibration_test_g_force": 20,
+      "shock_test_g_force": 1500
+    },
+    "compliance_certifications": {
+      "rohs_compliant": true,
+      "reach_regulation": "compliant",
+      "conflict_minerals": "conflict_free",
+      "export_control": "EAR99",
+      "itar_status": "not_applicable"
+    },
+    "supply_chain_security": {
+      "trusted_supplier_program": "tier_1",
+      "background_checks": "completed",
+      "facility_inspections": "annual",
+      "cybersecurity_assessment": "passed",
+      "tamper_evidence": "serialized_packaging"
+    },
+    "logistics": {
+      "shipping_method": "secure_transport",
+      "temperature_monitoring": "continuous",
+      "humidity_control": "maintained",
+      "chain_of_custody": "unbroken",
+      "customs_clearance": "pre_approved"
+    },
+    "end_customer": {
+      "industry": "automotive",
+      "application": "autonomous_driving_ecu",
+      "quality_requirements": "automotive_grade",
+      "traceability_level": "full_genealogy"
+    }
+  }
+}

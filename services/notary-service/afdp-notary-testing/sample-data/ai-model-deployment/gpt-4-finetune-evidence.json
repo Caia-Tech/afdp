@@ -1,0 +1,76 @@
+{
+  "event_type": "ai.model.deployment",
+  "timestamp": "2024-01-23T14:30:00.000Z",
+  "actor": {
+    "actor_type": "ci_system",
+    "id": "github-actions-prod-deployment",
+    "auth_provider": "github"
+  },
+  "artifacts": [
+    {
+      "name": "gpt-4-customer-support-v2.3.0.safetensors",
+      "uri": "s3://ai-models-prod/nlp/gpt-4-finetune/v2.3.0/model.safetensors",
+      "hash_sha256": "e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca495991b7852b855"
+    },
+    {
+      "name": "model-config.json",
+      "uri": "s3://ai-models-prod/nlp/gpt-4-finetune/v2.3.0/config.json",
+      "hash_sha256": "d2c1d3e7f8a6b5c4e9f0a1b2c3d4e5f6789012345678901234567890abcdef12"
+    },
+    {
+      "name": "tokenizer.json",
+      "uri": "s3://ai-models-prod/nlp/gpt-4-finetune/v2.3.0/tokenizer.json",
+      "hash_sha256": "abcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890"
+    },
+    {
+      "name": "training-metrics.json",
+      "uri": "s3://ai-models-prod/nlp/gpt-4-finetune/v2.3.0/metrics.json",
+      "hash_sha256": "1234567890abcdef1234567890abcdef1234567890abcdef1234567890abcdef"
+    }
+  ],
+  "metadata": {
+    "model_id": "gpt-4-customer-support-v2.3.0",
+    "model_type": "language_model",
+    "framework": "pytorch",
+    "base_model": "gpt-4-turbo",
+    "fine_tuning_dataset": "customer-support-corpus-2024",
+    "training_duration_hours": 48.5,
+    "gpu_type": "NVIDIA A100 80GB",
+    "gpu_count": 8,
+    "deployment_environment": "production",
+    "deployment_region": "us-east-1",
+    "kubernetes_cluster": "ai-prod-cluster-01",
+    "namespace": "nlp-models",
+    "replica_count": 3,
+    "resource_limits": {
+      "cpu": "16",
+      "memory": "64Gi",
+      "gpu": "2"
+    },
+    "model_metrics": {
+      "perplexity": 12.4,
+      "bleu_score": 0.87,
+      "rouge_l": 0.91,
+      "accuracy": 0.945,
+      "f1_score": 0.932,
+      "inference_latency_p95_ms": 127,
+      "tokens_per_second": 4200
+    },
+    "validation_results": {
+      "bias_testing": "passed",
+      "safety_filters": "enabled",
+      "hallucination_rate": 0.023,
+      "toxicity_score": 0.001
+    },
+    "compliance": {
+      "gdpr_compliant": true,
+      "ccpa_compliant": true,
+      "sox_compliant": true,
+      "data_retention_days": 90
+    },
+    "git_commit": "a7f8d9e2c4b6a3e1f5d9c7b5a3e1f5d9c7b5a3e1",
+    "git_branch": "release/v2.3.0",
+    "pipeline_run_id": "deploy-6789",
+    "approval_ticket": "JIRA-ML-4567"
+  }
+}
