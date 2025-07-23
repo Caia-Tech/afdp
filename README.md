@@ -213,7 +213,6 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 - 🐛 **Bug Reports**: [GitHub Issues](https://github.com/Caia-Tech/afdp/issues)
 - 💬 **Discussions**: [GitHub Discussions](https://github.com/Caia-Tech/afdp/discussions)
 - 📧 **General Inquiries**: [owner@caiatech.com](mailto:owner@caiatech.com)
-- 💼 **Enterprise Support**: [enterprise@caiatech.com](mailto:enterprise@caiatech.com)
 
 ---
 
