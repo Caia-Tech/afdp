@@ -56,13 +56,6 @@ Enterprise-grade cryptographic notarization service providing:
 
 
 
-### Planned Services
-
-#### 📊 Policy Engine Service `[Planned]`
-- AI model governance and approval workflows
-- Compliance policy validation
-- Risk assessment automation
-
 #### 🔍 [Repository Analysis Service](services/repository-analysis/) `[Development]`
 Universal forensic analysis for any repository type:
 - **Security Investigations** - Source code, digital evidence, financial records
@@ -91,30 +84,7 @@ Universal forensic analysis for any repository type:
 - **📊 Observable**: Comprehensive metrics, logging, and tracing
 - **🌐 Distributed Network Intelligence**: Choose what gets logged and instantly distribute findings to your stakeholders (legal teams, insurance, law enforcement, regulatory bodies) in real-time
 
-## 🚀 Quick Start
 
-### Prerequisites
-
-- **Docker** & **Docker Compose**
-- **Rust** 1.70+ (for notary service development)
-- **Git**
-
-### Getting Started with Notary Service
-
-```bash
-# Clone the repository
-git clone https://github.com/Caia-Tech/afdp.git
-cd afdp
-
-# Start the notary service
-cd services/notary-service
-docker-compose up -d
-
-# Run basic example
-cargo run --example basic_notarization
-```
-
-For detailed setup instructions, see the [Notary Service Documentation](services/notary-service/readme.md).
 
 ## 🏭 Use Cases
 
@@ -180,12 +150,35 @@ Example: API Deployment Impact
 - Identify patterns that lead to incidents
 - Optimize for actual business metrics, not just technical ones
 
-## 📚 Documentation
 
-- 🏗️ **System Architecture** - See individual service documentation
-- 🔧 **Configuration Guide** - Check each service's README
-- 🐳 **Docker Deployment** - Available in service directories
-- 🔐 **[Security Guide](services/notary-service/SECURITY.md)** - Security best practices
+AI Training Data Generation
+
+  AFDP creates a framework for generating training datasets that connect code changes to whatever production outcomes matter to YOUR
+  system.
+
+  The Opportunity
+
+  Every organization has different production realities:
+  - E-commerce: Code → Response time → Cart abandonment → Revenue
+  - SaaS: Deployment → API latency → User churn → MRR impact
+  - Infrastructure: Change → Resource usage → Scaling events → Cost
+  - Your system: Your code → Your metrics → Your outcomes
+
+  What AFDP Provides
+
+  A framework to:
+  - Define what production data matters to you
+  - Capture cause-and-effect sequences automatically
+  - Create training data from YOUR production patterns
+  - Maintain cryptographic proof of data authenticity
+
+  The Potential
+
+  This could enable AI models trained on real production behavior rather than synthetic tests. What that means depends entirely on your
+   use case - AFDP provides the plumbing, you define the intelligence.
+
+  The key insight: connecting code changes to production outcomes, whatever those outcomes are for your system. The rest is up to you.
+
 
 ### Service-Specific Documentation
 - 📖 **[Notary Service](services/notary-service/readme.md)** - Complete notary service documentation
