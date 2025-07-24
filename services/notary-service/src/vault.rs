@@ -90,16 +90,10 @@ impl VaultTransitClient {
     pub async fn get_public_key(&self) -> Result<String> {
         debug!("Retrieving public key for: {}", self.key_name);
 
-        // For MVP, we'll return a placeholder
-        // The actual implementation depends on the specific Vault configuration
-        // and whether the transit key is exportable
+        // NOTE: This requires Vault transit key to be configured as exportable
+        // Implementation depends on your Vault setup
         
-        // In production, you would:
-        // 1. Configure transit key to be exportable
-        // 2. Use appropriate vaultrs API to get the public key
-        // 3. Or store public keys separately in Vault KV store
-        
-        Ok("placeholder-public-key".to_string())
+        Err(NotaryError::NotImplemented("Public key export requires Vault configuration".to_string()))
     }
 }
 
@@ -440,10 +434,10 @@ mod tests {
         
         // Client creation should succeed (no network call yet)
         if let Ok(client) = client_result {
-            // get_public_key returns a placeholder, so it should work
+            // get_public_key is not implemented
             let pubkey_result = client.get_public_key().await;
-            assert!(pubkey_result.is_ok());
-            assert_eq!(pubkey_result.unwrap(), "placeholder-public-key");
+            assert!(pubkey_result.is_err());
+            assert!(matches!(pubkey_result.unwrap_err(), NotaryError::NotImplemented(_)));
         } else {
             // If client creation fails, that's also acceptable for this test
             let error = client_result.unwrap_err();
@@ -541,12 +535,12 @@ mod tests {
             transit_key_name: "debug-key".to_string(),
         };
 
-        // Create client and test get_public_key (which returns placeholder)
+        // Create client and test get_public_key (which is not implemented)
         if let Ok(client) = VaultTransitClient::new(config).await {
-            // get_public_key should work since it returns a placeholder
+            // get_public_key is not implemented
             let pubkey_result = client.get_public_key().await;
-            assert!(pubkey_result.is_ok());
-            assert_eq!(pubkey_result.unwrap(), "placeholder-public-key");
+            assert!(pubkey_result.is_err());
+            assert!(matches!(pubkey_result.unwrap_err(), NotaryError::NotImplemented(_)));
         }
         
         // Test completed successfully if we reach here
@@ -823,8 +817,8 @@ mod tests {
                     assert_eq!(client.key_name, key_name);
                     
                     // Test get_public_key with different key names
-                    let pubkey = client.get_public_key().await.unwrap();
-                    assert_eq!(pubkey, "placeholder-public-key");
+                    let pubkey_result = client.get_public_key().await;
+                    assert!(pubkey_result.is_err());
                 }
                 Err(_) => {
                     // Client creation might fail, that's ok for this test

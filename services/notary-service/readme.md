@@ -15,7 +15,7 @@
 
 ## 🎯 Overview
 
-The AFDP Notary Service is the cryptographic backbone of AI deployment pipelines, providing **forensic-grade audit trails** for regulatory compliance and legal defensibility. It transforms standard deployment events into **immutable, verifiable evidence** that cannot be repudiated, backdated, or tampered with.
+The AFDP Notary Service is the cryptographic backbone of AI deployment pipelines, providing **forensic-grade audit trails** for regulatory compliance and legal defensibility. It converts standard deployment events into **immutable, verifiable evidence** with strong tamper-resistance and non-repudiation properties.
 
 ### ✨ Key Features
 
