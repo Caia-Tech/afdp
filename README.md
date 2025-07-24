@@ -193,33 +193,7 @@ Example: API Deployment Impact
 - 🚀 **[DevOps Integration Guide](DEVOPS-INTEGRATION.md)** - How AFDP fits into your production workflows
 - 🔄 **[Workflow Customization](WORKFLOW-CUSTOMIZATION.md)** - Design your own intelligence collection workflows
 
-## 🗺️ Roadmap
 
-### ✅ Phase 1: Foundation (Current)
-- [x] Notary service core implementation
-- [x] Vault integration for key management
-- [x] Rekor integration for transparency logs
-- [x] REST/gRPC/Pulsar protocol support
-- [x] Comprehensive testing framework
-
-### 🚧 Phase 2: Service Expansion
-- [ ] Policy Engine service implementation
-- [ ] Repository Analysis service completion
-- [ ] Distributed intelligence networks
-- [ ] Inter-service communication patterns
-- [ ] Service mesh integration
-
-### 📋 Phase 3: Enterprise Features
-- [ ] Compliance Dashboard
-- [ ] Advanced analytics and reporting
-- [ ] Multi-tenancy support
-- [ ] HSM integration
-
-### 🔮 Phase 4: Platform Maturity
-- [ ] Advanced workflow orchestration
-- [ ] Machine learning ops integration
-- [ ] Global deployment patterns
-- [ ] Enterprise SLA guarantees
 
 ## 🔒 Security
 
@@ -231,49 +205,11 @@ AFDP is designed with security as a foundational principle:
 - **Secure Key Management** - Integration with enterprise HSMs and Vault
 - **Memory Safety** - Core services built in Rust to prevent memory vulnerabilities
 
-### Important Security Notes
 
-**⚠️ DEVELOPMENT ONLY**: This repository contains example configurations for development purposes. **Never use default tokens, passwords, or credentials in production environments.**
-
-For production deployments:
-- Generate strong, unique authentication tokens
-- Enable TLS for all service communications  
-- Use proper secret management systems
-- Follow the security guidelines in each service's documentation
-- Regularly rotate all credentials and keys
-
-## 🤝 Contributing
-
-We welcome contributions to the AFDP ecosystem! Please see our [Contributing Guide](CONTRIBUTING.md) for details.
-
-### Quick Contribution Checklist
-
-- [ ] Fork the repository
-- [ ] Choose a service or create a new feature branch
-- [ ] Write comprehensive tests
-- [ ] Ensure all tests pass
-- [ ] Follow coding standards (Rust: `cargo clippy`, `cargo fmt`)
-- [ ] Update documentation
-- [ ] Create pull request with clear description
-
-### 🏷️ Good First Issues
-
-Look for issues labeled:
-- `good first issue` - Perfect for newcomers
-- `help wanted` - Community input needed
-- `documentation` - Improve docs and examples
-- `testing` - Add test coverage
 
 ## 📄 License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 🙏 Acknowledgments
-
-- **[Sigstore](https://www.sigstore.dev/)** - Software supply chain transparency
-- **[HashiCorp](https://www.hashicorp.com/)** - Secure secrets and infrastructure management
-- **[Rust Foundation](https://foundation.rust-lang.org/)** - Memory-safe systems programming
-- **Open Source Community** - For the amazing ecosystem of tools and libraries
 
 ## 📞 Support & Contact
 
