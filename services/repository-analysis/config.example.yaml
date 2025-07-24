@@ -1,0 +1,178 @@
+# AFDP Repository Analysis Service Configuration
+
+server:
+  bind_address: "0.0.0.0"
+  port: 8080
+  cors:
+    enabled: true
+    allowed_origins: ["*"]
+    allowed_methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+    allowed_headers: ["Authorization", "Content-Type", "X-Request-ID"]
+  rate_limiting:
+    enabled: true
+    requests_per_minute: 100
+    burst_size: 20
+
+storage:
+  postgres:
+    host: "localhost"
+    port: 5432
+    username: "afdp_repo"
+    password: "${POSTGRES_PASSWORD}"
+    database: "afdp_repository_analysis"
+    ssl_mode: "require"
+    max_connections: 50
+    min_connections: 5
+    connection_timeout_seconds: 30
+  
+  object:
+    provider: "s3"  # Options: s3, gcs, azure, local
+    bucket: "afdp-repository-analysis"
+    region: "us-east-1"
+    endpoint: "https://s3.amazonaws.com"
+    access_key: "${AWS_ACCESS_KEY_ID}"
+    secret_key: "${AWS_SECRET_ACCESS_KEY}"
+  
+  vector:
+    host: "localhost"
+    port: 6333
+    api_key: "${QDRANT_API_KEY}"
+    collection_prefix: "afdp_repo"
+    vector_size: 768
+
+analysis:
+  max_file_size_mb: 100
+  max_repository_size_gb: 10
+  timeout_seconds: 3600
+  parallel_workers: 8
+  supported_formats: ["git", "zip", "tar", "directory"]
+  
+  malware_scanning:
+    enabled: false  # Disabled due to YARA and ClamAV dependency compatibility issues
+    engines: []  # ["yara", "clamav"] - disabled
+    yara_rules_path: "./rules/yara"  # Not used when disabled
+    clamav_db_path: "./db/clamav"  # Not used when disabled
+  
+  code_analysis:
+    enabled: true
+    languages: ["rust", "python", "javascript", "go", "java", "c", "cpp", "csharp"]
+    static_analysis: true
+    dependency_analysis: true
+    secret_detection: true
+  
+  ml_analysis:
+    enabled: true  # Basic ML analysis available with stub implementations
+    model_path: "./models/embeddings"  # Not used due to Candle framework being disabled
+    embedding_model: "stub-implementation"  # Using placeholder due to candle-core/candle-nn being disabled
+    similarity_threshold: 0.85
+    batch_size: 64
+
+forensics:
+  chain_of_custody: true
+  evidence_encryption: true
+  hash_algorithms: ["sha256", "sha512", "blake3"]
+  signature_algorithm: "ed25519"
+  retention_days: 2555  # 7 years
+  legal_hold_enabled: true
+
+auth:
+  policy_engine_url: "http://localhost:8082"
+  service_token: "${POLICY_ENGINE_TOKEN}"
+  jwt_verification_key: "${JWT_PUBLIC_KEY}"
+  required_permissions:
+    analysis:submit: ["analyst", "admin"]
+    analysis:read: ["analyst", "viewer", "admin"]
+    analysis:delete: ["admin"]
+    evidence:create: ["analyst", "admin"]
+    evidence:access: ["investigator", "admin"]
+
+events:
+  pulsar:
+    broker_url: "pulsar://localhost:6650"
+    auth_token: "${PULSAR_AUTH_TOKEN}"
+    topics: ["repository-analysis"]
+    subscription_name: "repo-analysis-events"
+    consumer_name: "repo-analysis-consumer"
+    batch_size: 100
+    compression_type: "zstd"
+    encryption_enabled: true
+    connection_timeout_ms: 5000
+    operation_timeout_ms: 30000
+  
+  topics:
+    analysis_submitted: "afdp.repository.analysis.submitted"
+    analysis_started: "afdp.repository.analysis.started"
+    analysis_progress: "afdp.repository.analysis.progress"
+    violation_detected: "afdp.repository.violation.detected"
+    anomaly_identified: "afdp.repository.anomaly.identified"
+    analysis_completed: "afdp.repository.analysis.completed"
+    evidence_discovered: "afdp.repository.evidence.discovered"
+  
+  distributed_networks: {}
+
+# Pulsar configuration for distributed intelligence
+pulsar:
+  broker_url: "pulsar://localhost:6650"
+  auth_token: "${PULSAR_AUTH_TOKEN}"
+  topics: 
+    - "security-alerts"
+    - "malware-alerts"
+    - "data-protection"
+    - "incident-response"
+    - "analysis-results"
+  subscription_name: "repo-analysis-sub"
+  consumer_name: "repo-analysis-consumer"
+  batch_size: 100
+  compression_type: "zstd"
+  encryption_enabled: true
+  connection_timeout_ms: 5000
+  operation_timeout_ms: 30000
+
+# Distributed intelligence networks
+distributed_networks:
+  - name: "security-team"
+    description: "Internal security team network"
+    topics: ["security-alerts", "incident-response"]
+    priority: "high"
+    filter_rules: ["severity:high", "severity:critical"]
+    encryption_required: true
+  
+  - name: "malware-team"
+    description: "Malware analysis and response team"
+    topics: ["malware-alerts", "security-alerts"]
+    priority: "high"
+    filter_rules: ["type:malware", "type:backdoor"]
+    encryption_required: true
+  
+  - name: "legal-team"
+    description: "Legal and compliance network"
+    topics: ["data-protection", "legal-alerts"]
+    priority: "medium"
+    filter_rules: ["type:data_leak", "type:compliance"]
+    encryption_required: true
+  
+  - name: "analysis-results"
+    description: "Analysis completion notifications"
+    topics: ["analysis-results"]
+    priority: "normal"
+    filter_rules: ["event:completed"]
+    encryption_required: false
+
+temporal:
+  host: "localhost"
+  port: 7233
+  namespace: "afdp-repository-analysis"
+  task_queue: "repository-analysis-tasks"
+  workflow_timeout_seconds: 3600
+  activity_timeout_seconds: 300
+
+logging:
+  level: "info"  # Options: trace, debug, info, warn, error
+  format: "json"  # Options: json, text
+  file_path: "./logs/repository-analysis.log"
+
+metrics:
+  enabled: true
+  bind_address: "0.0.0.0"
+  port: 8081
+  path: "/metrics"

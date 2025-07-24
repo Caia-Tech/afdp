@@ -1,0 +1,35 @@
+# Test runner Dockerfile for Repository Analysis Service
+FROM rust:1.75-slim-bookworm
+
+# Install dependencies
+RUN apt-get update && apt-get install -y \
+    pkg-config \
+    libssl-dev \
+    postgresql-client \
+    curl \
+    git \
+    && rm -rf /var/lib/apt/lists/*
+
+# Create app directory
+WORKDIR /app
+
+# Copy Cargo files first for better caching
+COPY Cargo.toml Cargo.lock ./
+
+# Copy source code
+COPY src ./src
+COPY tests ./tests
+
+# Build dependencies (this layer will be cached)
+RUN cargo build --tests --release
+
+# Create directories for test artifacts
+RUN mkdir -p /app/test-results /app/test-logs
+
+# Set environment for testing
+ENV RUST_TEST_THREADS=1
+ENV RUST_BACKTRACE=1
+ENV RUST_LOG=debug
+
+# Default command runs all tests
+CMD ["cargo", "test", "--release", "--", "--test-threads=1", "--nocapture"]

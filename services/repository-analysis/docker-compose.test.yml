@@ -1,0 +1,162 @@
+version: '3.8'
+
+services:
+  # PostgreSQL for metadata storage
+  postgres:
+    image: postgres:15-alpine
+    container_name: repo-analysis-postgres
+    environment:
+      POSTGRES_USER: afdp_repo
+      POSTGRES_PASSWORD: test_password
+      POSTGRES_DB: afdp_repository_analysis
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U afdp_repo"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Qdrant for vector storage
+  qdrant:
+    image: qdrant/qdrant:latest
+    container_name: repo-analysis-qdrant
+    ports:
+      - "6333:6333"
+      - "6334:6334"
+    volumes:
+      - qdrant_data:/qdrant/storage
+    environment:
+      QDRANT_LOG_LEVEL: INFO
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:6333/health"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # MinIO for object storage (S3-compatible)
+  minio:
+    image: minio/minio:latest
+    container_name: repo-analysis-minio
+    command: server /data --console-address ":9001"
+    environment:
+      MINIO_ROOT_USER: minioadmin
+      MINIO_ROOT_PASSWORD: minioadmin
+    ports:
+      - "9000:9000"
+      - "9001:9001"
+    volumes:
+      - minio_data:/data
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:9000/minio/health/live"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  # Apache Pulsar for event streaming
+  pulsar:
+    image: apachepulsar/pulsar:3.0.0
+    container_name: repo-analysis-pulsar
+    command: bin/pulsar standalone
+    ports:
+      - "6650:6650"
+      - "8080:8080"
+    volumes:
+      - pulsar_data:/pulsar/data
+      - pulsar_conf:/pulsar/conf
+    healthcheck:
+      test: ["CMD", "bin/pulsar-admin", "brokers", "healthcheck"]
+      interval: 30s
+      timeout: 10s
+      retries: 5
+
+  # Temporal for workflow orchestration (optional)
+  temporal:
+    image: temporalio/auto-setup:latest
+    container_name: repo-analysis-temporal
+    depends_on:
+      - postgres
+    environment:
+      - DB=postgresql
+      - DB_PORT=5432
+      - POSTGRES_USER=afdp_repo
+      - POSTGRES_PWD=test_password
+      - POSTGRES_SEEDS=postgres
+    ports:
+      - "7233:7233"
+    healthcheck:
+      test: ["CMD", "temporal", "workflow", "list"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  temporal-web:
+    image: temporalio/web:latest
+    container_name: repo-analysis-temporal-web
+    depends_on:
+      - temporal
+    environment:
+      - TEMPORAL_GRPC_ENDPOINT=temporal:7233
+      - TEMPORAL_PERMIT_WRITE_API=true
+    ports:
+      - "8088:8088"
+
+  # Test runner service
+  test-runner:
+    build:
+      context: .
+      dockerfile: Dockerfile.test
+    container_name: repo-analysis-test-runner
+    depends_on:
+      postgres:
+        condition: service_healthy
+      qdrant:
+        condition: service_healthy
+      minio:
+        condition: service_healthy
+      pulsar:
+        condition: service_healthy
+    environment:
+      # Database configuration
+      DATABASE_URL: postgresql://afdp_repo:test_password@postgres:5432/afdp_repository_analysis
+      POSTGRES_HOST: postgres
+      POSTGRES_PORT: 5432
+      POSTGRES_USER: afdp_repo
+      POSTGRES_PASSWORD: test_password
+      POSTGRES_DB: afdp_repository_analysis
+      
+      # Vector storage configuration
+      QDRANT_HOST: qdrant
+      QDRANT_PORT: 6333
+      
+      # Object storage configuration
+      S3_ENDPOINT: http://minio:9000
+      AWS_ACCESS_KEY_ID: minioadmin
+      AWS_SECRET_ACCESS_KEY: minioadmin
+      
+      # Pulsar configuration
+      PULSAR_BROKER_URL: pulsar://pulsar:6650
+      PULSAR_ADMIN_URL: http://pulsar:8080
+      
+      # Test configuration
+      RUST_LOG: debug
+      RUST_BACKTRACE: 1
+      RUN_INTEGRATION_TESTS: "true"
+      RUN_PERF_TESTS: "false"
+    volumes:
+      - ./tests:/app/tests
+      - ./test-results:/app/test-results
+    command: ["cargo", "test", "--", "--test-threads=1", "--nocapture"]
+
+volumes:
+  postgres_data:
+  qdrant_data:
+  minio_data:
+  pulsar_data:
+  pulsar_conf:
+
+networks:
+  default:
+    name: repo-analysis-test-network

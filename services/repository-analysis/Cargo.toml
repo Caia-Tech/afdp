@@ -1,0 +1,156 @@
+# AFDP Repository Analysis Service
+# NOTE: Several dependencies are currently disabled due to version compatibility issues:
+# - yara: YARA rule engine for malware detection
+# - clamav-rs: ClamAV antivirus integration
+# - candle-core/candle-nn: ML framework for neural networks
+# - pdf-extract: PDF text extraction
+# - docx-rs: DOCX document processing
+# These features have been replaced with stub implementations until compatibility is resolved.
+
+[package]
+name = "afdp-repository-analysis"
+version = "0.1.0"
+edition = "2021"
+authors = ["Caia Tech <owner@caiatech.com>"]
+description = "AFDP Repository Analysis Service - Universal forensic analysis for any repository type"
+license = "MIT"
+repository = "https://github.com/Caia-Tech/afdp"
+
+[dependencies]
+# Core async runtime and utilities
+tokio = { version = "1.35", features = ["full"] }
+tokio-util = { version = "0.7", features = ["full"] }
+futures = "0.3"
+async-trait = "0.1"
+
+# Web framework and APIs
+axum = { version = "0.7", features = ["macros", "multipart"] }
+tower = { version = "0.4", features = ["full"] }
+tower-http = { version = "0.5", features = ["full"] }
+hyper = { version = "1.0", features = ["full"] }
+
+# gRPC support
+tonic = { version = "0.10", features = ["tls"] }
+tonic-build = "0.10"
+prost = "0.12"
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+serde_yaml = "0.9"
+toml = "0.8"
+
+# Database and storage
+# sqlx = { version = "0.7", features = ["runtime-tokio-rustls", "postgres", "uuid", "chrono", "json"] } # Disabled for testing
+# redis = { version = "0.24", features = ["aio", "tokio-comp"] } # Disabled for testing
+# object_store = { version = "0.8", features = ["aws", "gcp", "azure"] } # Disabled for testing
+
+# Vector database
+# qdrant-client = { version = "1.7", features = ["serde"] } # Disabled for testing
+
+# Temporal workflow engine
+# temporal-sdk = "0.1"
+# temporal-sdk-core = "0.1"
+
+# Apache Pulsar
+# pulsar = { version = "6.0", default-features = false, features = ["tokio-runtime", "auth-oauth2"] } # Disabled for testing
+
+# File processing and analysis
+walkdir = "2.4"
+ignore = "0.4"
+mime_guess = "2.0"
+tree-sitter = "0.20"
+git2 = { version = "0.18", features = ["vendored-openssl"] }
+
+# Archive handling
+zip = "0.6"
+tar = "0.4"
+flate2 = "1.0"
+bzip2 = "0.4"
+xz2 = "0.1"
+
+# Text processing and NLP
+regex = "1.10"
+unicode-segmentation = "1.10"
+whatlang = "0.16"
+
+# Image and document processing
+image = { version = "0.24", features = ["jpeg", "png", "gif", "webp"] }
+# PDF and DOCX processing dependencies - DISABLED due to version compatibility issues
+# TODO: Re-enable when dependencies support current Rust version and resolve compatibility
+# pdf-extract = "0.6" # Disabled due to version compatibility issues
+# docx-rs = "0.4" # Disabled due to version compatibility issues
+
+# Cryptography and hashing
+sha2 = "0.10"
+blake3 = "1.5"
+md5 = "0.7"
+hex = "0.4"
+ring = "0.17"
+
+# Security and malware detection - DISABLED due to version compatibility issues
+# TODO: Re-enable when dependencies support current Rust version and resolve compatibility
+# yara = "0.11" # Disabled due to version compatibility issues with Rust toolchain
+# clamav-rs = "0.5" # Disabled due to version compatibility issues with Rust toolchain
+
+# ML and AI - DISABLED due to Rust version requirements
+# TODO: Re-enable when Candle framework supports current Rust version and toolchain
+# candle-core = "0.3" # Disabled due to Rust version requirements and compatibility issues
+# candle-nn = "0.3" # Disabled due to Rust version requirements and compatibility issues
+tokenizers = "0.15"
+
+# Utilities
+uuid = { version = "1.6", features = ["v4", "serde"] }
+chrono = { version = "0.4", features = ["serde"] }
+url = { version = "2.5", features = ["serde"] }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter", "json"] }
+anyhow = "1.0"
+thiserror = "1.0"
+config = "0.14"
+clap = { version = "4.4", features = ["derive"] }
+
+# Authentication and authorization
+jsonwebtoken = "9.2"
+argon2 = "0.5"
+
+# Prometheus metrics
+prometheus = "0.13"
+axum-prometheus = "0.5"
+
+# Health checks
+# tower-health = "0.1"
+
+[build-dependencies]
+tonic-build = "0.10"
+
+[dev-dependencies]
+tempfile = "3.8"
+wiremock = "0.5"
+criterion = { version = "0.5", features = ["html_reports"] }
+colored = "2.0"
+reqwest = { version = "0.11", features = ["json"] }
+
+[[bin]]
+name = "afdp-repository-analysis"
+path = "src/main.rs"
+
+# [[bin]]
+# name = "afdp-repo-worker"
+# path = "src/worker.rs"
+
+# [[bin]]
+# name = "afdp-repo-cli"
+# path = "src/cli.rs"
+
+# [[bench]]
+# name = "analysis_benchmarks"
+# harness = false
+
+[profile.release]
+lto = true
+codegen-units = 1
+panic = "abort"
+
+[profile.dev]
+debug = true

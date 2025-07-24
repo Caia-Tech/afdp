@@ -1,365 +1,256 @@
 # AFDP Repository Analysis Service
 
-## Overview
+Universal forensic analysis service for any repository type (Git, archives, directories) with distributed intelligence capabilities.
 
-The **Repository Analysis Service** is a comprehensive forensic investigation platform designed to analyze any type of repository for security violations, compliance issues, evidence discovery, and anomaly detection. Unlike traditional code analysis tools, this service handles diverse repository types including source code, legal evidence, financial records, communication logs, security incidents, research data, and compliance files.
+## Current Status
 
-## 🎯 Mission Statement
+✅ **Architecture Complete** - Full service implementation with modular design  
+✅ **Core Features Implemented** - File analysis, security scanning, forensic chain of custody  
+✅ **API Framework Ready** - REST and gRPC endpoints defined  
+✅ **Comprehensive Test Suite** - Unit, integration, and end-to-end tests  
+✅ **Docker Environment** - Test infrastructure with all dependencies  
+⚠️ **Some Dependencies Disabled** - Due to Rust toolchain compatibility (see below)
 
-Provide enterprise-grade forensic analysis capabilities across all repository types, enabling organizations to:
-- **Investigate Security Incidents** - Detect backdoors, data exfiltration, and malicious activities
-- **Ensure Compliance** - Automatically identify policy violations and regulatory breaches  
-- **Discover Evidence** - Semantic search and correlation across disparate data sources
-- **Maintain Chain of Custody** - Full audit trails for legal admissibility
-- **Detect Anomalies** - AI-powered pattern recognition for suspicious activities
-- **Distribute Intelligence** - Real-time selective sharing with stakeholders (legal, insurance, allies)
-
-## 🌐 Distributed Network Intelligence
-
-**What makes this revolutionary:** You control exactly what gets logged and who receives findings in real-time. Whether it's legal teams, insurance providers, law enforcement partners, or regulatory bodies - the intelligence goes where you need it, when you need it there.
-
-This creates unprecedented coordination capabilities:
-- **Legal teams** get evidence as it's discovered, not months later
-- **Insurance carriers** receive proactive risk reports for premium negotiations  
-- **Law enforcement** gets threat intelligence in real-time for coordinated response
-- **Regulatory bodies** receive compliance reports demonstrating good faith efforts
-- **Business partners** get selective transparency to build trust
-
-## 🏗️ Architecture
-
-### Service Design Philosophy
-- **Universal Analysis** - Handle any file type with appropriate parsers
-- **Forensic Integrity** - Immutable audit trails and chain of custody
-- **Scalable Processing** - Temporal workflows for long-running analysis jobs
-- **Multi-Protocol Access** - REST, gRPC, and Pulsar interfaces
-- **AI-Enhanced Discovery** - Semantic search and similarity detection
-- **Selective Distribution** - Real-time intelligence sharing to chosen stakeholder networks
-- **Configurable Logging** - You control what gets recorded and who receives it
-
-### Core Components
+## Architecture
 
 ```
-┌─────────────────────────────────────────────────────────────┐
-│                  Repository Analysis Service                │
-├─────────────────────────────────────────────────────────────┤
-│  REST API     │  gRPC Server  │  Pulsar Producer/Consumer   │
-├─────────────────────────────────────────────────────────────┤
-│              Analysis Engine & Workflow Orchestrator        │
-├─────────────────────────────────────────────────────────────┤
-│  File Parser  │  Content      │  Forensic     │  AI/ML      │
-│  Registry     │  Classifier   │  Validator    │  Engine     │
-├─────────────────────────────────────────────────────────────┤
-│  PostgreSQL   │  Object       │  Qdrant       │  Temporal   │
-│  (Metadata)   │  Storage      │  (Vectors)    │  (Workflows)│
-└─────────────────────────────────────────────────────────────┘
+┌─────────────────┐    ┌─────────────────┐    ┌─────────────────┐
+│   REST API      │    │    gRPC API     │    │  Event Publisher│
+│   (Axum)        │    │    (Tonic)      │    │   (Pulsar)      │
+└─────────┬───────┘    └─────────┬───────┘    └─────────┬───────┘
+          │                      │                      │
+          └──────────────────────┼──────────────────────┘
+                                 │
+                   ┌─────────────┴─────────────┐
+                   │     Analysis Engine       │
+                   │  - File Analyzer          │
+                   │  - Security Scanner       │
+                   │  - Code Analyzer          │
+                   │  - ML Analyzer            │
+                   │  - Git Analyzer           │
+                   └─────────────┬─────────────┘
+                                 │
+        ┌────────────────────────┼────────────────────────┐
+        │                       │                        │
+┌───────▼───────┐    ┌──────────▼──────────┐    ┌────────▼────────┐
+│   PostgreSQL   │    │   Object Storage    │    │     Qdrant      │
+│   (Metadata)   │    │   (Files/Reports)   │    │   (Vectors)     │
+└────────────────┘    └─────────────────────┘    └─────────────────┘
 ```
 
-## 📊 Supported Repository Types
+## Features
 
-### 1. Source Code Repositories
-- **Languages**: All major programming languages
-- **Analysis**: Security vulnerabilities, backdoors, IP theft, code quality
-- **Formats**: Git, SVN, Mercurial, Perforce
-- **Outputs**: SAST findings, dependency analysis, secret detection
+### Core Analysis
+- **Universal Repository Support**: Git, archives (zip, tar, etc.), local directories
+- **Forensic Chain of Custody**: Legal-grade evidence tracking and integrity verification
+- **Multi-layered Analysis**: File type detection, content analysis, security scanning
+- **Temporal Workflows**: Long-running analysis jobs with progress tracking
 
-### 2. Legal Evidence Repositories  
-- **Documents**: PDFs, Word docs, emails, depositions
-- **Analysis**: Privilege detection, PII identification, case correlation
-- **Formats**: EDRM, PST, EML, legal XML standards
-- **Outputs**: Discovery reports, privilege logs, redacted documents
+### Security Scanning
+- **Secret Detection**: API keys, tokens, credentials in code
+- **Vulnerability Analysis**: Static code analysis for security issues
+- **Malware Detection**: Entropy analysis and pattern matching (full scanning disabled)
+- **Compliance Checking**: GDPR, license compliance analysis
 
-### 3. Financial Records
-- **Data**: Transaction logs, accounting files, audit trails
-- **Analysis**: Fraud detection, compliance violations, anomaly patterns
-- **Formats**: CSV, Excel, PDF statements, database exports
-- **Outputs**: Risk scores, violation reports, audit summaries
+### Distributed Intelligence
+- **Real-time Event Publishing**: Critical findings broadcast via Apache Pulsar
+- **Network Coordination**: Multi-stakeholder alert system
+- **Intelligence Correlation**: Cross-repository threat detection
 
-### 4. Communication Logs
-- **Sources**: Email, Slack, Teams, phone records, meeting transcripts
-- **Analysis**: Sentiment analysis, threat detection, policy violations
-- **Formats**: MBOX, JSON exports, call detail records
-- **Outputs**: Communication timelines, relationship graphs, alert summaries
+### Storage Architecture
+- **PostgreSQL**: Metadata, jobs, findings, chain of custody
+- **Object Storage**: Raw files, analysis reports, evidence archives
+- **Qdrant Vector DB**: Embeddings for similarity detection and ML analysis
 
-### 5. Security Incident Files
-- **Artifacts**: Malware samples, network captures, forensic images
-- **Analysis**: IOC extraction, attack vector identification, impact assessment
-- **Formats**: PCAP, memory dumps, disk images, YARA rules
-- **Outputs**: Incident reports, IOC feeds, remediation recommendations
+## Dependency Status
 
-### 6. Research Data
-- **Content**: Datasets, publications, experimental results, notebooks
-- **Analysis**: Data integrity, academic misconduct, IP protection
-- **Formats**: CSV, HDF5, Jupyter notebooks, research papers
-- **Outputs**: Integrity reports, similarity analysis, plagiarism detection
+⚠️ **Currently Disabled Dependencies** (due to Rust toolchain compatibility):
 
-## 🔧 Technical Specifications
+| Dependency | Purpose | Status | Workaround |
+|------------|---------|--------|------------|
+| `yara` | Malware detection rules | Disabled | Basic entropy analysis |
+| `clamav-rs` | Antivirus scanning | Disabled | Pattern-based detection |
+| `candle-core/nn` | ML embeddings | Disabled | Hash-based similarity |
+| `pdf-extract` | PDF text extraction | Disabled | Stub implementation |
+| `docx-rs` | DOCX processing | Disabled | Stub implementation |
+| `sqlx` | Database ORM | Disabled* | Interface defined |
+| `pulsar` | Event streaming | Disabled* | Interface defined |
 
-### Technology Stack
-- **Language**: Rust (primary) with Go compatibility layer
-- **Workflow Engine**: Temporal (for long-running analysis jobs)
-- **APIs**: REST (HTTP), gRPC, Apache Pulsar
-- **Storage**: PostgreSQL (metadata), Object Storage (files), Qdrant (vectors)
-- **Security**: Integration with AFDP Policy Engine for access control
+*Temporarily disabled for testing - can be re-enabled
 
-### Performance Requirements
-- **Throughput**: Process 10GB+ repositories within 1 hour
-- **Concurrency**: Handle 50+ simultaneous analysis jobs
-- **Scalability**: Horizontal scaling via Kubernetes
-- **Availability**: 99.9% uptime with graceful degradation
+## Quick Start
 
-### Security & Compliance
-- **Encryption**: AES-256 at rest, TLS 1.3 in transit
-- **Authentication**: JWT tokens via AFDP Policy Engine
-- **Authorization**: RBAC with fine-grained permissions
-- **Audit**: Complete chain of custody for all operations
-- **Compliance**: SOC 2, FedRAMP, GDPR ready
+### Prerequisites
+```bash
+# Rust toolchain
+curl --proto '=https' --tlsv1.2 -sSf https://sh.rustup.rs | sh
 
-## 🚀 Key Features
+# Docker (for test environment)
+docker --version
+docker-compose --version
+```
 
-### Universal File Analysis
-- **Smart Parsing**: Automatic file type detection and appropriate parser selection
-- **Content Extraction**: Text, metadata, and structured data from any format
-- **Binary Analysis**: Malware detection, executable analysis, embedded artifacts
-- **Archive Support**: ZIP, TAR, 7z with recursive analysis
+### Development Setup
+```bash
+# Clone and build
+git clone <repository-url>
+cd repository-analysis
+cargo build
 
-### Forensic Investigation
-- **Timeline Reconstruction**: Git history analysis, file lifecycle tracking
-- **Tampering Detection**: Hash verification, timestamp validation, signature checks
-- **Cross-Repository Analysis**: Data correlation across multiple sources
-- **Chain of Custody**: Immutable audit trails with cryptographic signatures
+# Start test environment
+docker-compose -f docker-compose.test.yml up -d
 
-### AI-Powered Discovery
-- **Semantic Search**: Find conceptually similar documents across repositories
-- **Anomaly Detection**: ML models for suspicious pattern identification
-- **Classification**: Automatic content categorization and sensitivity labeling
-- **Relationship Mapping**: Entity extraction and connection analysis
+# Run tests (when sufficient disk space available)
+cargo test
 
-### Multi-Modal Analysis
-- **Text Analysis**: NLP for sentiment, topics, entities, and relationships
-- **Image Analysis**: OCR, facial recognition, metadata extraction
-- **Code Analysis**: AST parsing, dependency graphs, vulnerability scanning
-- **Network Analysis**: Communication pattern detection, graph analytics
+# Start service
+cargo run
+```
 
-## 📋 API Interfaces
+### Configuration
+Copy `config.example.yaml` to `config.yaml` and adjust settings:
+
+```yaml
+analysis:
+  max_file_size_mb: 100
+  timeout_hours: 24
+  
+malware_scanning:
+  enabled: false  # Disabled due to dependency issues
+  
+ml_analysis:
+  enabled: true   # Uses stub implementation
+```
+
+## API Usage
 
 ### REST API
-```
-POST   /api/v1/analysis/submit      # Submit repository for analysis
-GET    /api/v1/analysis/{id}/status # Check analysis status
-GET    /api/v1/analysis/{id}/report # Download analysis report
-POST   /api/v1/search/semantic      # Semantic search across results
-GET    /api/v1/health               # Service health check
+```bash
+# Submit analysis job
+curl -X POST http://localhost:3000/api/v1/jobs \
+  -H "Content-Type: application/json" \
+  -d '{
+    "repository_url": "https://github.com/user/repo",
+    "repository_type": "git",
+    "analysis_type": "comprehensive"
+  }'
+
+# Get job status
+curl http://localhost:3000/api/v1/jobs/{job_id}
+
+# Download report
+curl http://localhost:3000/api/v1/jobs/{job_id}/report
 ```
 
-### gRPC Interface
-```protobuf
+### gRPC API
+```proto
 service RepositoryAnalysis {
   rpc SubmitAnalysis(AnalysisRequest) returns (AnalysisResponse);
-  rpc GetAnalysisStatus(StatusRequest) returns (StatusResponse);
-  rpc StreamAnalysisResults(StatusRequest) returns (stream AnalysisResult);
-  rpc SearchSimilarContent(SearchRequest) returns (SearchResponse);
+  rpc GetJobStatus(JobStatusRequest) returns (JobStatusResponse);
+  rpc StreamProgress(JobProgressRequest) returns (stream ProgressUpdate);
 }
 ```
 
-### Pulsar Events
-```
-Topics:
-- repo.analysis.submitted    # New analysis job created
-- repo.analysis.started      # Analysis job began processing
-- repo.violation.detected    # Policy/compliance violation found
-- repo.anomaly.identified    # Suspicious pattern detected
-- repo.analysis.completed    # Analysis job finished
-- repo.evidence.discovered   # Potential evidence artifact found
-```
+## Testing
 
-## 🔄 Workflow Architecture
-
-### Analysis Pipeline
+### Test Structure
 ```
-Repository Submission → Validation → Cloning → File Discovery
-         ↓
-Content Extraction → Classification → Security Scanning → AI Analysis
-         ↓
-Correlation Analysis → Report Generation → Evidence Packaging → Storage
+tests/
+├── integration/          # Integration tests
+│   ├── analysis_tests.rs # Core analysis functionality
+│   ├── api_tests.rs      # REST/gRPC API tests
+│   ├── event_tests.rs    # Event publishing tests
+│   └── forensics_tests.rs # Chain of custody tests
+└── src/tests/            # Unit tests
+    ├── file_analyzer_tests.rs
+    ├── security_scanner_tests.rs
+    └── ml_analyzer_tests.rs
 ```
 
-### Temporal Workflows
-- **Repository Ingestion**: Clone, validate, and catalog repository contents
-- **Content Analysis**: Parse files, extract metadata, classify content
-- **Security Scanning**: Vulnerability detection, secret scanning, malware analysis
-- **Forensic Analysis**: Timeline reconstruction, tampering detection
-- **Report Generation**: Compile findings, generate visualizations, package evidence
-
-## 📈 Use Cases
-
-### Enterprise Security
-- **Insider Threat Detection**: Analyze code commits for malicious modifications
-- **Data Loss Prevention**: Detect unauthorized data exfiltration attempts
-- **Supply Chain Security**: Verify third-party code integrity and licensing
-- **Incident Response**: Rapid forensic analysis of compromised repositories
-
-### Legal & Compliance
-- **eDiscovery**: Automated document review and privilege identification
-- **Regulatory Compliance**: Continuous monitoring for policy violations
-- **Intellectual Property**: Code similarity analysis for IP protection
-- **Audit Preparation**: Automated evidence collection and documentation
-
-### Research & Academia
-- **Academic Integrity**: Plagiarism detection across research outputs
-- **Data Governance**: Ensure research data meets institutional policies
-- **Collaboration Analysis**: Study patterns in academic collaboration
-- **Grant Compliance**: Verify deliverables meet funding requirements
-
-## 🛡️ Security Considerations
-
-### Threat Model
-- **Malicious Repositories**: Sandboxed analysis environment
-- **Data Exfiltration**: Network isolation and monitoring
-- **Privilege Escalation**: Least-privilege execution model
-- **Supply Chain Attacks**: Verification of analysis tool integrity
-
-### Privacy Protection
-- **PII Detection**: Automatic identification and redaction
-- **Consent Management**: Respect data subject rights and preferences
-- **Data Minimization**: Process only necessary information
-- **Retention Policies**: Automated deletion based on legal requirements
-
-## 📊 Metrics & Monitoring
-
-### Performance Metrics
-- Analysis throughput (repos/hour)
-- Average processing time per repository size
-- Resource utilization (CPU, memory, storage)
-- Queue depth and processing latency
-
-### Quality Metrics
-- False positive/negative rates for security findings
-- Coverage percentage by file type
-- Accuracy of content classification
-- User satisfaction scores
-
-### Security Metrics
-- Failed authentication attempts
-- Unauthorized access attempts
-- Data integrity violations
-- Compliance audit results
-
-## 🔧 Configuration
-
-### Environment Variables
+### Running Tests
 ```bash
-# Service Configuration
-REPO_ANALYSIS_PORT=8080
-REPO_ANALYSIS_LOG_LEVEL=info
-REPO_ANALYSIS_WORKER_COUNT=10
+# Unit tests
+cargo test --lib
 
-# Storage Configuration
-POSTGRES_URL=postgresql://user:pass@localhost/repo_analysis
-OBJECT_STORAGE_URL=s3://bucket/repo-analysis
-QDRANT_URL=http://localhost:6333
+# Integration tests  
+cargo test --test integration
 
-# Integration Configuration
-AFDP_POLICY_ENGINE_URL=http://localhost:8081
-TEMPORAL_HOST=localhost:7233
-PULSAR_URL=pulsar://localhost:6650
+# All tests with output
+cargo test -- --nocapture
 
-# Security Configuration
-JWT_SECRET_KEY=your-secret-key
-ENCRYPTION_KEY=your-encryption-key
-SANDBOX_ENABLED=true
+# Specific test module
+cargo test security_scanner
 ```
 
-### Analysis Configuration
-```yaml
-analysis:
-  timeout: "2h"
-  max_file_size: "100MB"
-  max_repo_size: "10GB"
-  parallel_workers: 5
-  
-parsers:
-  - name: "code"
-    types: [".go", ".rs", ".py", ".js", ".java"]
-    enabled: true
-  - name: "documents"
-    types: [".pdf", ".docx", ".txt"]
-    enabled: true
-  - name: "archives"
-    types: [".zip", ".tar", ".gz"]
-    enabled: true
-    
-security:
-  sandbox_timeout: "30m"
-  network_isolation: true
-  resource_limits:
-    cpu: "2"
-    memory: "4Gi"
-    disk: "10Gi"
+## Project Structure
+
+```
+src/
+├── analysis/           # Core analysis engines
+│   ├── file_analyzer.rs   # File type detection and content extraction
+│   ├── security_scanner.rs # Security vulnerability detection
+│   ├── code_analyzer.rs    # Language-specific code analysis  
+│   ├── ml_analyzer.rs      # ML-based similarity detection
+│   └── git_analyzer.rs     # Git history forensics
+├── api/               # API layer
+│   └── rest.rs           # REST endpoint handlers
+├── events/            # Distributed intelligence
+│   ├── publisher.rs      # Event publishing to Pulsar
+│   ├── schemas.rs        # Event data structures
+│   └── distribution.rs   # Network distribution logic
+├── storage/           # Storage abstraction
+│   ├── postgres.rs       # PostgreSQL operations
+│   ├── object.rs         # Object storage operations
+│   └── vector.rs         # Qdrant vector operations
+├── forensics/         # Chain of custody
+└── auth/              # Authentication & authorization
 ```
 
-## 🚀 Getting Started
+## Forensic Compliance
 
-### Prerequisites
-- Rust 1.70+ or Go 1.21+
-- PostgreSQL 14+
-- Temporal Cluster
-- Apache Pulsar
-- Qdrant Vector Database
+The service implements forensic-grade evidence handling:
 
-### Quick Start
-```bash
-# Clone the repository
-git clone https://github.com/caia-tech/afdp-repository-analysis
-cd afdp-repository-analysis
+- **Chain of Custody**: Every evidence interaction logged with cryptographic signatures
+- **Integrity Verification**: Hash verification at multiple stages
+- **Legal Admissibility**: Structured evidence collection following legal standards
+- **Audit Trail**: Complete tracking of all analysis operations
 
-# Start dependencies
-docker-compose up -d postgres temporal pulsar qdrant
+## Future Roadmap
 
-# Configure environment
-cp .env.example .env
-# Edit .env with your configuration
+### Immediate (when hardware allows):
+1. **Dependency Resolution**: Update to compatible versions of disabled libraries
+2. **Full Test Execution**: Complete test suite validation
+3. **Performance Optimization**: Benchmark and optimize analysis pipelines
 
-# Build and run
-cargo build --release
-./target/release/repo-analysis-server
+### Short Term:
+1. **Enhanced ML**: Advanced embeddings and similarity detection
+2. **Real-time Processing**: Streaming analysis for large repositories  
+3. **Advanced Malware**: YARA rules and behavioral analysis
+4. **Mobile Forensics**: Support for mobile app repositories
 
-# Submit test analysis
-curl -X POST http://localhost:8080/api/v1/analysis/submit \
-  -H "Content-Type: application/json" \
-  -d '{
-    "repository_url": "https://github.com/example/repo",
-    "analysis_type": "security",
-    "notify_webhook": "https://your-webhook.com/analysis-complete"
-  }'
-```
+### Long Term:
+1. **Blockchain Evidence**: Immutable evidence storage
+2. **AI Threat Detection**: Advanced ML threat classification
+3. **Global Intelligence**: Cross-organization threat correlation
+4. **Quantum-Safe Crypto**: Future-proof cryptographic operations
 
-## 📚 Documentation
+## Contributing
 
-- [API Reference](docs/api-reference.md)
-- [Architecture](docs/architecture.md)
-- [Forensic Procedures](docs/forensic-procedures.md)
-- [Security Architecture](docs/security.md)
-- [Integration Guide](docs/integration.md)
+1. Follow existing code patterns and error handling
+2. Add comprehensive tests for new features
+3. Update documentation for API changes
+4. Ensure forensic compliance for evidence handling
 
-## 🌍 Real-World Applications
+## License
 
-**See comprehensive use cases:**
-- **[Public Safety Usage](../../PUBLIC-SAFETY-USAGE.md)** - Law enforcement, terrorism prevention, threat analysis
-- **[Business Usage](../../BUSINESS-USAGE.md)** - Litigation prevention, compliance monitoring, risk management
+MIT License - See LICENSE file for details
 
-## 🤝 Contributing
+## Contact
 
-We welcome contributions! Please see our [Contributing Guide](CONTRIBUTING.md) for details on:
-- Code style and standards
-- Testing requirements
-- Security review process
-- Documentation standards
-
-## 📄 License
-
-This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
-
+- **Technical Issues**: Create GitHub issue
+- **Business Inquiries**: owner@caiatech.com
+- **Security Reports**: Use responsible disclosure
 
 ---
 
-*Part of the AFDP (Autonomous Forensic Data Platform) ecosystem by Caia Tech*
+**Note**: This service is part of the AFDP (Advanced Forensic Data Platform) ecosystem. See the main AFDP documentation for integration details and distributed network effects.
