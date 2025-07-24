@@ -1,0 +1,207 @@
+# AFDP Policy Engine Example Configuration
+name: "AFDP Policy Engine"
+version: "1.0.0"
+description: "AI-Ready Forensic Deployment Pipeline Policy Engine"
+
+# Logging configuration
+logging:
+  level: "info"
+  format: "json"
+  outputs:
+    - type: "console"
+    - type: "file"
+      path: "/var/log/afdp/policy-engine.log"
+
+# Metrics and monitoring
+metrics:
+  enabled: true
+  port: 8081
+  path: "/metrics"
+
+# Storage configuration
+storage:
+  type: "memory"  # Use "postgresql" for production
+  
+  # PostgreSQL configuration (when type: postgresql)
+  postgresql:
+    host: "localhost"
+    port: 5432
+    database: "afdp_policy"
+    username: "afdp_user"
+    password: "secure_password"
+    ssl_mode: "require"
+    max_connections: 25
+    connection_timeout: "30s"
+
+# Plugin configurations
+plugins:
+  # Rego policy evaluator
+  - name: "rego"
+    type: "evaluator"
+    enabled: true
+    config:
+      # Initial data store for OPA
+      data:
+        users:
+          admin:
+            roles: ["admin", "user"]
+            clearance: "secret"
+          user1:
+            roles: ["user"]
+            clearance: "public"
+          service:
+            roles: ["service"]
+            clearance: "public"
+        
+        # Resource classifications
+        resources:
+          repository_analysis:
+            required_clearance: "secret"
+            required_roles: ["admin", "analyst"]
+          policy_management:
+            required_clearance: "public"
+            required_roles: ["admin"]
+      
+      # Pre-loaded policies
+      policies:
+        # AFDP Repository Analysis Authorization
+        repository_access: |
+          package afdp.repository.access
+          
+          default allow = false
+          
+          # Admins can access everything
+          allow {
+            input.user.roles[_] == "admin"
+          }
+          
+          # Analysts can access repository analysis with proper clearance
+          allow {
+            input.action == "repository:analyze"
+            input.user.roles[_] == "analyst"
+            input.user.clearance in ["secret", "top_secret"]
+          }
+          
+          # Users can read their own analysis results
+          allow {
+            input.action == "repository:read"
+            input.resource.owner == input.user.id
+          }
+          
+          # Service accounts can submit analysis jobs
+          allow {
+            input.action == "repository:submit"
+            input.user.roles[_] == "service"
+          }
+        
+        # Basic RBAC policy
+        basic_rbac: |
+          package policy
+          
+          default allow = false
+          
+          # Allow admins to do everything
+          allow {
+            input.user.roles[_] == "admin"
+          }
+          
+          # Allow users to read their own data
+          allow {
+            input.action == "read"
+            input.resource.owner == input.user.id
+          }
+          
+          # Allow users to create new resources
+          allow {
+            input.action == "create"
+            input.user.roles[_] == "user"
+          }
+          
+          # Require approval for sensitive operations
+          requires_approval {
+            input.action in ["delete", "modify"]
+            input.resource.classification == "sensitive"
+          }
+
+  # Security provider with JWT authentication
+  - name: "default"
+    type: "security"
+    enabled: true
+    config:
+      jwt_secret: "afdp_development_secret_change_in_production"
+      token_expiry: "15m"
+      refresh_expiry: "7d"
+      
+      # Password policy
+      password_policy:
+        min_length: 8
+        require_uppercase: true
+        require_lowercase: true
+        require_numbers: true
+        require_symbols: false
+      
+      # Session management
+      session_timeout: "1h"
+      max_sessions_per_user: 5
+
+# API Server configuration
+server:
+  host: "0.0.0.0"
+  port: 8080
+  read_timeout: "30s"
+  write_timeout: "30s"
+  idle_timeout: "120s"
+  
+  # TLS configuration (for production)
+  tls:
+    enabled: false
+    cert_file: "/etc/afdp/certs/server.crt"
+    key_file: "/etc/afdp/certs/server.key"
+  
+  # CORS configuration
+  cors:
+    enabled: true
+    allowed_origins: ["*"]  # Restrict in production
+    allowed_methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+    allowed_headers: ["Authorization", "Content-Type"]
+
+# Integration with other AFDP services
+integrations:
+  # Repository Analysis Service
+  repository_analysis:
+    enabled: true
+    endpoint: "http://localhost:8082"
+    api_key: "afdp_repo_analysis_key"
+    
+  # Notary Service
+  notary:
+    enabled: true
+    endpoint: "http://localhost:8083"
+    api_key: "afdp_notary_key"
+
+# Security and compliance
+security:
+  # Audit logging
+  audit:
+    enabled: true
+    log_decisions: true
+    log_authentications: true
+    log_authorization_failures: true
+    
+  # Rate limiting
+  rate_limiting:
+    enabled: true
+    requests_per_minute: 100
+    burst_size: 20
+  
+  # Access control
+  access_control:
+    require_authentication: true
+    enforce_rbac: true
+    
+# Development and debugging
+development:
+  enabled: true
+  debug_endpoints: true
+  pretty_print_json: true
+  detailed_errors: true
