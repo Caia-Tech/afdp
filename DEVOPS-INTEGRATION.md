@@ -242,3 +242,57 @@ Tell AFDP what matters:
 3. Implement auto-rollback for severe impacts
 4. Full automation once confidence is high
 
+---
+
+## 🔄 Custom Workflow Design
+
+### Define Your Own Collection Logic
+
+AFDP uses Temporal workflows to let you control exactly how data is collected:
+
+**Example: Custom deployment impact workflow**
+```yaml
+deployment_workflow:
+  steps:
+    - wait_for_deployment_signal
+    - capture_baseline_metrics
+    - wait_for_impact_period
+    - capture_impact_metrics
+    - analyze_differences
+    - generate_training_data
+    
+  collect:
+    - api_latency_p99
+    - user_sessions_active  
+    - revenue_per_minute
+    - custom_business_metric
+```
+
+### Workflow Integrity
+
+Every workflow execution is tracked:
+- **WHO** triggered it (cryptographically signed)
+- **WHAT** steps were executed (Temporal's event history)
+- **WHEN** each step occurred (tamper-proof timestamps)
+- **HOW** data was transformed (full audit trail)
+
+This means you can prove:
+- "This training data came from THIS specific workflow"
+- "The data was collected using THESE exact steps"
+- "No steps were skipped or data manipulated"
+
+### Why This Matters
+
+Traditional monitoring just shows you data. AFDP shows you:
+- The data itself
+- How it was collected
+- Who authorized collection
+- What transformations were applied
+- Complete chain of custody
+
+This is essential for:
+- Regulatory compliance
+- Training data quality assurance
+- Debugging ML model issues
+- Audit requirements
+

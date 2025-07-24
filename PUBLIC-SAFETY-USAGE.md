@@ -329,7 +329,7 @@ For information about AFDP for legitimate law enforcement forensics:
 
 ---
 
-**Important Note**: AFDP is designed for court-authorized digital forensics in criminal investigations, not mass surveillance or predictive policing. All capabilities require proper legal authorization and are subject to constitutional limitations.
+**Important Note**: AFDP is designed for anyone who is authorized to manage digital forensics, not mass surveillance or predictive policing. All capabilities require proper legal authorization and are subject to constitutional limitations.
 
 **Key Reminder**: The Fourth Amendment requires warrants based on probable cause for searching private digital data. AFDP is a tool for analyzing properly obtained evidence, not circumventing legal requirements.
 

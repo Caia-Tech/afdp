@@ -25,6 +25,8 @@ AFDP is a comprehensive microservices ecosystem that combines **forensic-grade a
 
 **Key Approach**: AFDP captures cause-and-effect sequences in production, creating ML training datasets that reflect real-world behavior, not just synthetic tests.
 
+**Workflow Customization**: Using Temporal, organizations can define their own collection workflows - what to monitor, when to collect, how to process. Combined with Git's cryptographic properties, this creates an immutable record of not just WHAT was collected, but HOW it was collected, ensuring complete workflow integrity.
+
 **Status**: Active Development with Initial Implementations
 
 ## 🏗️ Architecture
@@ -192,6 +194,7 @@ Example: API Deployment Impact
 - 📖 **[Notary Service](services/notary-service/readme.md)** - Complete notary service documentation
 - 📖 **[Repository Analysis Service](services/repository-analysis/README.md)** - Universal forensic analysis capabilities
 - 🚀 **[DevOps Integration Guide](DEVOPS-INTEGRATION.md)** - How AFDP fits into your production workflows
+- 🔄 **[Workflow Customization](WORKFLOW-CUSTOMIZATION.md)** - Design your own intelligence collection workflows
 
 ## 🗺️ Roadmap
 
@@ -283,4 +286,3 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 ---
 
-**Built with ❤️ by [Caia Tech](https://caiatech.com) for the future of trustworthy AI deployment**
