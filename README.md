@@ -76,9 +76,6 @@ Universal forensic analysis for any repository type:
 - Audit trail visualization
 
 ## 🚨 Enterprise Use Cases
-
-**For comprehensive real-world applications, see:**
-- **[🛡️ Public Safety & Threat Prevention](PUBLIC-SAFETY-USAGE.md)** - Law enforcement, terrorism prevention, threat analysis
 - **[💼 Business & Enterprise Applications](BUSINESS-USAGE.md)** - Litigation prevention, compliance monitoring, risk management
 
 ## 🌟 Key Features
