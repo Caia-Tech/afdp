@@ -1,5 +1,4 @@
-Caia Tech presents:
-  └── gaia (Gate Artificial Intelligence Architecture) https://github.com/Caia-Tech/gaia
+
 
 # AI-Ready Forensic Deployment Pipeline (AFDP)
 
