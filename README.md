@@ -1,15 +1,3 @@
-  Built revolutionary tools from nothing.
-  Healthcare using my blueprints.
-  911 won't even assist me properly
-  Still garnishing me weekly.
-
-  Done being your free R&D department.
-  Done innovating for your profit.
-  Done building while you pretend I don't exist
-  Done saving systems that fail me.
-
-  Until something changes, this is over.
-
 # AI-Ready Forensic Deployment Pipeline (AFDP)
 
 [![Services](https://img.shields.io/badge/services-1-blue.svg)](services/)
